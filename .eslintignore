@@ -1,0 +1,6 @@
+*.config.js
+*.config.ts
+*.json
+.gitignore
+node_modules
+*.lock
