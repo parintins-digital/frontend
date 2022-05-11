@@ -1,6 +1,10 @@
 import {createTheme, CssBaseline} from '@mui/material'
 import {ThemeProvider} from '@mui/system'
+import AuthenticationProvider from './contexts/Authentication'
+import ToastProvider from './contexts/Toast'
 import Router from './routes'
+
+import './globalStyles.css'
 
 const theme = createTheme({
   palette: {
@@ -17,10 +21,14 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router />
-    </ThemeProvider>
+    <AuthenticationProvider>
+      <ToastProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router />
+        </ThemeProvider>
+      </ToastProvider>
+    </AuthenticationProvider>
   )
 }
 

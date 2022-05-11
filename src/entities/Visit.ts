@@ -1,5 +1,5 @@
 export interface Visit {
-  userId: number
-  pictureId: number
+  userId: string
+  pictureId: string
   createdAt: Date
 }

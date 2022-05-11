@@ -1,8 +1,10 @@
+export type CategoryType = 'ATTRACTION' | 'CULTURE' | 'LANDMARK' | 'COMMUNITY'
+
 export interface Picture {
-  id: number
+  id?: string
   title: string
   description: string
   image?: File
-  category: 'ATTRACTION' | 'CULTURE' | 'LANDMARK' | 'COMMUNITY'
-  createdAt: Date
+  category: CategoryType
+  createdAt?: Date
 }

@@ -1,28 +1,69 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-} from '@mui/material'
-import {Picture} from '../../entities/Picture'
+import {styled} from '@mui/material/styles'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import CardContent from '@mui/material/CardContent'
+import CardActions from '@mui/material/CardActions'
+import Collapse from '@mui/material/Collapse'
+import IconButton, {IconButtonProps} from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import {Picture as PictureEntity} from '../../entities/Picture'
+import {QRCodeCanvas, QRCodeSVG} from 'qrcode.react'
 
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import PrintIcon from '@mui/icons-material/Print'
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean
+}
+
+import DefaultPicture from '../../assets/DefaultPicture.svg'
+import {Download, Print} from '@mui/icons-material'
+import {useState} from 'react'
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const {expand, ...other} = props
+  return <IconButton {...other} />
+})(({theme, expand}) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}))
 
 interface Props {
-  picture: Picture
+  picture: PictureEntity
 }
 
 const Picture: React.FC<Props> = ({picture}: Props) => {
+  const [expanded, setExpanded] = useState(false)
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded)
+  }
+
+  function downloadQRCode() {
+    const canvas: any = document.querySelector(
+      `.${picture.title}-${picture.id} > canvas`
+    )
+    console.log(canvas)
+    const pngFile = canvas.toDataURL('image/png')
+    const downloadLink = document.createElement('a')
+    downloadLink.download = 'QRCode-' + picture.title
+    downloadLink.href = `${pngFile}`
+    downloadLink.click()
+  }
+
   return (
-    <Card sx={{maxWidth: 345}}>
+    <Card
+      className="printable"
+      sx={{maxWidth: 345}}
+    >
       <CardMedia
         component="img"
-        height="140"
-        image="/static/images/cards/contemplative-reptile.jpg"
-        alt="Imagem do Local"
+        height="194"
+        image={
+          picture.image ? URL.createObjectURL(picture.image) : DefaultPicture
+        }
+        alt={picture.title}
       />
       <CardContent>
         <Typography
@@ -39,20 +80,50 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
           {picture.description}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button
-          size="small"
-          startIcon={<ArrowDownwardIcon />}
+      <CardActions disableSpacing>
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
         >
-          Download
-        </Button>
-        <Button
-          size="small"
-          startIcon={<PrintIcon />}
-        >
-          Imprimir QRCode
-        </Button>
+          <ExpandMoreIcon />
+        </ExpandMore>
       </CardActions>
+      <Collapse
+        in={expanded}
+        timeout="auto"
+        unmountOnExit
+        className="printable"
+      >
+        <CardContent
+          className="printable"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            gutterBottom
+            variant="body1"
+            component="div"
+          >
+            Faça o download do QRCode:
+          </Typography>
+          <div className={`${picture.title}-${picture.id}`}>
+            <QRCodeCanvas value={picture.id || '0'} />
+          </div>
+          <CardActions disableSpacing>
+            <IconButton
+              onClick={downloadQRCode}
+              aria-label="Download QRCode"
+            >
+              <Download />
+            </IconButton>
+          </CardActions>
+        </CardContent>
+      </Collapse>
     </Card>
   )
 }

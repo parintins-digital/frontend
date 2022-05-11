@@ -1,0 +1,24 @@
+@media print {
+  svg {
+    display: visible !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  label,
+  textarea,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  button,
+  img,
+  div {
+    display: none;
+  }
+}
