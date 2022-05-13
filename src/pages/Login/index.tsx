@@ -14,12 +14,15 @@ import {colors} from '../../colors'
 import LogoImage from '../../assets/Logo.png'
 import {useNavigate} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
+import {PathBuilder} from '../../utils/PathBuilder'
+import {API_URL} from '../../Constants'
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
 
-  function handleSignUp() {
-    navigate('/signup')
+  function handleGoogleAuth() {
+    const loginURL = new PathBuilder(API_URL).addPath('login').build()
+    window.open(loginURL, '_self')
   }
 
   function handleSignIn() {
@@ -125,7 +128,7 @@ const Login: React.FC = () => {
                 </Grid>
                 <Grid item>
                   <Button
-                    onClick={handleSignUp}
+                    onClick={handleGoogleAuth}
                     variant="contained"
                     color="secondary"
                     startIcon={<GoogleIcon />}

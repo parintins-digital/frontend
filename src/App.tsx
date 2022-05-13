@@ -4,8 +4,6 @@ import AuthenticationProvider from './contexts/Authentication'
 import ToastProvider from './contexts/Toast'
 import Router from './routes'
 
-import './globalStyles.css'
-
 const theme = createTheme({
   palette: {
     primary: {

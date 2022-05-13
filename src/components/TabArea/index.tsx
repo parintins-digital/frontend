@@ -12,7 +12,6 @@ const TabArea: React.FC<Props> = ({children}: Props) => {
       flexWrap="wrap"
       marginTop={2}
       gap={8}
-      className="printable"
     >
       {children.length !== 0 ? (
         children

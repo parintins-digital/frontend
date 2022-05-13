@@ -53,10 +53,7 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
   }
 
   return (
-    <Card
-      className="printable"
-      sx={{maxWidth: 345}}
-    >
+    <Card sx={{maxWidth: 345}}>
       <CardMedia
         component="img"
         height="194"
@@ -94,10 +91,8 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
         in={expanded}
         timeout="auto"
         unmountOnExit
-        className="printable"
       >
         <CardContent
-          className="printable"
           style={{
             display: 'flex',
             flexDirection: 'column',

@@ -56,7 +56,6 @@ const Homepage: React.FC = () => {
     <Grid
       container
       height="100vh"
-      className="printable"
     >
       <AppBar
         sx={{
@@ -90,7 +89,6 @@ const Homepage: React.FC = () => {
         zIndex={0}
         display="flex"
         gap={40}
-        className="printable"
       >
         <Drawer
           variant="permanent"
@@ -194,7 +192,6 @@ const Homepage: React.FC = () => {
           mt={8}
           display="flex"
           flexDirection="column"
-          className="printable"
         >
           {getCurrentTab() === Tabs.HOME && (
             <>
