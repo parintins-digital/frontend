@@ -1,5 +1,4 @@
-import {useContext, useEffect, useState} from 'react'
-import {ToastContext} from '../../contexts/Toast'
+import {useEffect, useState} from 'react'
 import {CategoryType, Picture as PictureEntity} from '../../entities/Picture'
 import TabArea from '../TabArea'
 import {PictureService} from '../../services/PictureService'
@@ -17,12 +16,7 @@ const PicturesList: React.FC<Props> = ({filterBy}: Props) => {
   const handleFetch = useLoading(fetch, 'Buscando figuras cadastradas...')
 
   function renderPicture(picture: PictureEntity) {
-    return (
-      <Picture
-        key={picture.id || picture.title}
-        picture={picture}
-      />
-    )
+    return <Picture key={picture.id || picture.title} picture={picture} />
   }
 
   useEffect(() => {

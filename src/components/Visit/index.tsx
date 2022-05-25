@@ -56,7 +56,7 @@ const Visit: React.FC<Props> = ({visit}: Props) => {
             component="div"
           >
             Você visitou {picture?.title} no dia{' '}
-            {dateFrom(new Date(visit.createdAt))}
+            {dateFrom(new Date(visit.visitedOn))}
           </Typography>
         </CardContent>
       </Card>

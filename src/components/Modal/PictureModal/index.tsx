@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   forwardRef,
   useCallback,
+  useContext,
   useImperativeHandle,
   useState,
 } from 'react'
@@ -21,6 +22,7 @@ import {
   SxProps,
   Theme,
 } from '@mui/material'
+import {ToastContext} from '../../../contexts/Toast'
 
 const style: SxProps<Theme> = {
   position: 'absolute' as const,
@@ -53,13 +55,20 @@ const pictureService = new PictureService()
 const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
   const [open, setOpen] = React.useState(false)
   const [imageURL, setImageURL] = useState<string>()
-  const {register, handleSubmit} = useForm<FormData>()
+  const {showToast} = useContext(ToastContext)
+  const {register, handleSubmit, reset} = useForm<FormData>()
+
+  function handleReset() {
+    reset()
+    setImageURL(undefined)
+  }
 
   const handleOpen = useCallback(() => {
     setOpen(true)
   }, [])
 
   const handleClose = useCallback(() => {
+    handleReset()
     setOpen(false)
   }, [])
 
@@ -80,17 +89,19 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
       category: category,
     }
 
-    const createdPicture = await pictureService.create(newPicture)
+    await pictureService
+      .create(newPicture)
+      .then(() => {
+        showToast('Figura cadastrada com sucesso.', 'success')
+      })
+      .catch(() => {
+        showToast('Erro ao cadastrar uma figura. Tente novamente.', 'error')
+      })
   }
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-
-    if (!file) {
-      handleClearImage()
-      return
-    }
-
+    if (!file) return
     const url = URL.createObjectURL(file)
     setImageURL(url)
   }
@@ -120,14 +131,14 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
           Cadastrar uma nova figura
         </Typography>
         <form
-          onSubmit={() => handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
           style={{display: 'flex', flexDirection: 'column', gap: '24px'}}
         >
           <FormControl fullWidth>
             <InputLabel htmlFor="title">Título</InputLabel>
             <Input
               fullWidth
-              {...(register('title'), {required: true})}
+              {...register('title')}
             />
           </FormControl>
           <FormControl fullWidth>
@@ -143,6 +154,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
             <Select
               {...register('category')}
               label="Categoria"
+              defaultValue="ATTRACTION"
             >
               <MenuItem value={'ATTRACTION'}>Pontos Turísticos</MenuItem>
               <MenuItem value={'CULTURE'}>Cultura</MenuItem>

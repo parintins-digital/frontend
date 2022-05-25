@@ -1,5 +1,6 @@
 import api from '../api'
 import {User} from '../entities/User'
+import {PathBuilder} from '../utils/PathBuilder'
 
 const PATH = '/user'
 
@@ -18,8 +19,11 @@ export class UserService {
     localStorage.clear()
   }
 
-  async login(token: string): Promise<User> {
-    const {data: user} = await api.post<User>(PATH, {token})
+  async login(email: string, password: string): Promise<User> {
+    const {data: user} = await api.post<User>(
+      new PathBuilder(PATH).addPath('login').build(),
+      {email, password}
+    )
     return user
   }
 }

@@ -1,6 +1,6 @@
 {
   "singleQuote": true,
   "bracketSpacing": false,
-  "singleAttributePerLine": true,
+  "singleAttributePerLine": false,
   "semi": false
 }

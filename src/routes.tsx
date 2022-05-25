@@ -3,22 +3,19 @@ import Homepage from './pages/Homepage'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 
+export enum PATHS {
+  LOGIN = '/',
+  HOMEPAGE = '/homepage',
+  SIGNUP = '/signup',
+}
+
 const Router: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={<Login />}
-        />
-        <Route
-          path="/signup"
-          element={<SignUp />}
-        />
-        <Route
-          path="/homepage"
-          element={<Homepage />}
-        />
+        <Route path={PATHS.LOGIN} element={<Login />} />
+        <Route path={PATHS.SIGNUP} element={<SignUp />} />
+        <Route path={PATHS.HOMEPAGE} element={<Homepage />} />
       </Routes>
     </BrowserRouter>
   )

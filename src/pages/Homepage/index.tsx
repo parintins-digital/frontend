@@ -1,7 +1,5 @@
 import {
-  AppBar,
   Box,
-  Button,
   Divider,
   Drawer,
   Grid,
@@ -14,7 +12,6 @@ import {
 } from '@mui/material'
 
 import TheaterComedyIcon from '@mui/icons-material/TheaterComedy'
-import LogoutIcon from '@mui/icons-material/Logout'
 import TheatersIcon from '@mui/icons-material/Theaters'
 import LocationCityIcon from '@mui/icons-material/LocationCity'
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage'
@@ -22,13 +19,13 @@ import HomeIcon from '@mui/icons-material/Home'
 import AddIcon from '@mui/icons-material/Add'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
 
-import LogoImage from '../../assets/Logo-v2.png'
-import {useNavigate} from 'react-router-dom'
 import {useTab} from '../../hooks/useTab'
 import PictureModal, {PictureProps} from '../../components/Modal/PictureModal'
 import {useRef} from 'react'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 
 enum Tabs {
   HOME,
@@ -40,56 +37,18 @@ enum Tabs {
 }
 
 const Homepage: React.FC = () => {
-  const navigate = useNavigate()
   const pictureModal = useRef<PictureProps>(null)
   const {changeTab, getCurrentTab} = useTab(Tabs.HOME)
-
-  function handleLogout() {
-    navigate('/')
-  }
 
   function handleCreatePicture() {
     pictureModal.current?.open()
   }
 
   return (
-    <Grid
-      container
-      height="100vh"
-    >
-      <AppBar
-        sx={{
-          zIndex: 1,
-        }}
-      >
-        <Toolbar>
-          <img
-            src={LogoImage}
-            alt="Logo"
-            style={{
-              width: '100px',
-              height: 'auto',
-            }}
-          />
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleLogout}
-            startIcon={<LogoutIcon />}
-            sx={{
-              marginLeft: 'auto',
-            }}
-          >
-            Sair
-          </Button>
-        </Toolbar>
-      </AppBar>
+    <Grid container height="100vh">
+      <Header />
 
-      <Box
-        zIndex={0}
-        display="flex"
-        gap={40}
-      >
+      <Box zIndex={0} display="flex" gap={40}>
         <Drawer
           variant="permanent"
           sx={{
@@ -111,10 +70,7 @@ const Homepage: React.FC = () => {
                 },
               }}
             >
-              <ListItem
-                button
-                onClick={() => changeTab(Tabs.HOME)}
-              >
+              <ListItem button onClick={() => changeTab(Tabs.HOME)}>
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
@@ -132,28 +88,19 @@ const Homepage: React.FC = () => {
                 </ListItemIcon>
                 <ListItemText primary="Pontos Turísticos" />
               </ListItem>
-              <ListItem
-                button
-                onClick={() => changeTab(Tabs.CULTURA)}
-              >
+              <ListItem button onClick={() => changeTab(Tabs.CULTURA)}>
                 <ListItemIcon>
                   <TheaterComedyIcon />
                 </ListItemIcon>
                 <ListItemText primary="Cultura" />
               </ListItem>
-              <ListItem
-                button
-                onClick={() => changeTab(Tabs.POINT)}
-              >
+              <ListItem button onClick={() => changeTab(Tabs.POINT)}>
                 <ListItemIcon>
                   <LocationCityIcon />
                 </ListItemIcon>
                 <ListItemText primary="Point da Cidade" />
               </ListItem>
-              <ListItem
-                button
-                onClick={() => changeTab(Tabs.PERSONALIDADES)}
-              >
+              <ListItem button onClick={() => changeTab(Tabs.PERSONALIDADES)}>
                 <ListItemIcon>
                   <HolidayVillageIcon />
                 </ListItemIcon>
@@ -162,10 +109,7 @@ const Homepage: React.FC = () => {
             </List>
             <Divider />
             <List>
-              <ListItem
-                button
-                onClick={() => changeTab(Tabs.VISITAS)}
-              >
+              <ListItem button onClick={() => changeTab(Tabs.VISITAS)}>
                 <ListItemIcon>
                   <AccountTreeIcon />
                 </ListItemIcon>
@@ -174,10 +118,7 @@ const Homepage: React.FC = () => {
             </List>
             <Divider />
             <List>
-              <ListItem
-                button
-                onClick={handleCreatePicture}
-              >
+              <ListItem button onClick={handleCreatePicture}>
                 <ListItemIcon>
                   <AddIcon />
                 </ListItemIcon>
@@ -187,18 +128,10 @@ const Homepage: React.FC = () => {
           </Box>
         </Drawer>
 
-        <Box
-          p={4}
-          mt={8}
-          display="flex"
-          flexDirection="column"
-        >
+        <Box p={4} mt={8} display="flex" flexDirection="column">
           {getCurrentTab() === Tabs.HOME && (
             <>
-              <Typography
-                variant="h4"
-                component="div"
-              >
+              <Typography variant="h4" component="div">
                 Seja bem-vindo ao seu Álbum Digital!
               </Typography>
               <Divider
@@ -206,10 +139,7 @@ const Homepage: React.FC = () => {
                   margin: '8px 0px',
                 }}
               />
-              <Typography
-                variant="h6"
-                component="div"
-              >
+              <Typography variant="h6" component="div">
                 Início
               </Typography>
 
@@ -218,10 +148,7 @@ const Homepage: React.FC = () => {
           )}
           {getCurrentTab() === Tabs.PONTOS_TURISTICOS && (
             <>
-              <Typography
-                variant="h4"
-                component="div"
-              >
+              <Typography variant="h4" component="div">
                 Pontos Turísticos
               </Typography>
               <Divider
@@ -235,10 +162,7 @@ const Homepage: React.FC = () => {
           )}
           {getCurrentTab() === Tabs.CULTURA && (
             <>
-              <Typography
-                variant="h4"
-                component="div"
-              >
+              <Typography variant="h4" component="div">
                 Cultura
               </Typography>
               <Divider
@@ -251,10 +175,7 @@ const Homepage: React.FC = () => {
           )}
           {getCurrentTab() === Tabs.POINT && (
             <>
-              <Typography
-                variant="h4"
-                component="div"
-              >
+              <Typography variant="h4" component="div">
                 Point da Cidade
               </Typography>
               <Divider
@@ -267,10 +188,7 @@ const Homepage: React.FC = () => {
           )}
           {getCurrentTab() === Tabs.PERSONALIDADES && (
             <>
-              <Typography
-                variant="h4"
-                component="div"
-              >
+              <Typography variant="h4" component="div">
                 Personalidades e Comunidades
               </Typography>
               <Divider
@@ -283,10 +201,7 @@ const Homepage: React.FC = () => {
           )}
           {getCurrentTab() === Tabs.VISITAS && (
             <>
-              <Typography
-                variant="h4"
-                component="div"
-              >
+              <Typography variant="h4" component="div">
                 Histórico de Visitas
               </Typography>
               <Divider
@@ -297,6 +212,7 @@ const Homepage: React.FC = () => {
               <VisitList />
             </>
           )}
+          <Footer />
         </Box>
       </Box>
       <PictureModal ref={pictureModal} />

@@ -44,7 +44,6 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
     const canvas: any = document.querySelector(
       `.${picture.title}-${picture.id} > canvas`
     )
-    console.log(canvas)
     const pngFile = canvas.toDataURL('image/png')
     const downloadLink = document.createElement('a')
     downloadLink.download = 'QRCode-' + picture.title
@@ -63,17 +62,10 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
         alt={picture.title}
       />
       <CardContent>
-        <Typography
-          gutterBottom
-          variant="h5"
-          component="div"
-        >
+        <Typography gutterBottom variant="h5" component="div">
           {picture.title}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-        >
+        <Typography variant="body2" color="text.secondary">
           {picture.description}
         </Typography>
       </CardContent>
@@ -87,11 +79,7 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
-      <Collapse
-        in={expanded}
-        timeout="auto"
-        unmountOnExit
-      >
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent
           style={{
             display: 'flex',
@@ -99,21 +87,14 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
             alignItems: 'center',
           }}
         >
-          <Typography
-            gutterBottom
-            variant="body1"
-            component="div"
-          >
+          <Typography gutterBottom variant="body1" component="div">
             Faça o download do QRCode:
           </Typography>
           <div className={`${picture.title}-${picture.id}`}>
             <QRCodeCanvas value={picture.id || '0'} />
           </div>
           <CardActions disableSpacing>
-            <IconButton
-              onClick={downloadQRCode}
-              aria-label="Download QRCode"
-            >
+            <IconButton onClick={downloadQRCode} aria-label="Download QRCode">
               <Download />
             </IconButton>
           </CardActions>

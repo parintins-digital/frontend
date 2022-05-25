@@ -1,5 +1,6 @@
 import {createTheme, CssBaseline} from '@mui/material'
 import {ThemeProvider} from '@mui/system'
+import {DOMAIN} from './Constants'
 import AuthenticationProvider from './contexts/Authentication'
 import ToastProvider from './contexts/Toast'
 import Router from './routes'
@@ -18,6 +19,7 @@ const theme = createTheme({
 })
 
 function App() {
+  console.info('Bem-vindo a Parintins Digital, no domínio:', DOMAIN)
   return (
     <AuthenticationProvider>
       <ToastProvider>

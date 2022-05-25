@@ -2,7 +2,7 @@ import api from '../api'
 import {Visit} from '../entities/Visit'
 import {PathBuilder} from '../utils/PathBuilder'
 
-export const PATH = '/visit'
+export const PATH = '/user/visit'
 
 export class VisitService {
   async fetch(): Promise<Array<Visit>> {

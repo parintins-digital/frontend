@@ -4,7 +4,7 @@ import {UserService} from '../services/UserService'
 
 interface AuthProps {
   getAuthenticatedUser: () => User | undefined
-  login: (token: string) => Promise<User>
+  login: (email: string, password: string) => Promise<User>
   logout: () => void
 }
 
@@ -22,8 +22,8 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     return user
   }
 
-  async function login(token: string): Promise<User> {
-    const user = await userService.login(token)
+  async function login(email: string, password: string): Promise<User> {
+    const user = await userService.login(email, password)
     return user
   }
 
