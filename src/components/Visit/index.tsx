@@ -1,18 +1,12 @@
-import {styled} from '@mui/material/styles'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
-import Collapse from '@mui/material/Collapse'
-import IconButton, {IconButtonProps} from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import {Visit as VisitEntity} from '../../entities/Visit'
 
 import {useEffect, useState} from 'react'
-import {Button} from '@mui/material'
 import {Picture} from '../../entities/Picture'
 import {PictureService} from '../../services/PictureService'
-import {useLoading} from '../../hooks/useLoading'
 import {dateFrom} from '../../utils/FormatDateTime'
 
 interface Props {
@@ -50,11 +44,7 @@ const Visit: React.FC<Props> = ({visit}: Props) => {
           />
         )}
         <CardContent>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-          >
+          <Typography gutterBottom variant="h5" component="div">
             Você visitou {picture?.title} no dia{' '}
             {dateFrom(new Date(visit.visitedOn))}
           </Typography>

@@ -8,15 +8,17 @@ import IconButton, {IconButtonProps} from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {Picture as PictureEntity} from '../../entities/Picture'
-import {QRCodeCanvas, QRCodeSVG} from 'qrcode.react'
+import {QRCodeCanvas} from 'qrcode.react'
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
 }
 
 import DefaultPicture from '../../assets/DefaultPicture.svg'
-import {Download, Print} from '@mui/icons-material'
+import {Download} from '@mui/icons-material'
 import {useState} from 'react'
+import {DOMAIN} from '../../Constants'
+import {PathBuilder} from '../../utils/PathBuilder'
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const {expand, ...other} = props
@@ -35,6 +37,11 @@ interface Props {
 
 const Picture: React.FC<Props> = ({picture}: Props) => {
   const [expanded, setExpanded] = useState(false)
+
+  const qrCodeURL = new PathBuilder(DOMAIN)
+    .addPath('homepage')
+    .addPath(picture.id || picture.title)
+    .build()
 
   const handleExpandClick = () => {
     setExpanded(!expanded)
@@ -91,7 +98,7 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
             Faça o download do QRCode:
           </Typography>
           <div className={`${picture.title}-${picture.id}`}>
-            <QRCodeCanvas value={picture.id || '0'} />
+            <QRCodeCanvas value={qrCodeURL} />
           </div>
           <CardActions disableSpacing>
             <IconButton onClick={downloadQRCode} aria-label="Download QRCode">

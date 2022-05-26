@@ -10,11 +10,11 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import GoogleIcon from '@mui/icons-material/Google'
 import {colors} from '../../colors'
-
 import LogoImage from '../../assets/Logo.png'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {PathBuilder} from '../../utils/PathBuilder'
 import {API_URL} from '../../Constants'
@@ -22,6 +22,7 @@ import {Visibility, VisibilityOff} from '@mui/icons-material'
 import {useState} from 'react'
 import {useForm} from 'react-hook-form'
 import {PATHS} from '../../routes'
+import {useCustomNavigate} from '../../hooks/useRedirect'
 
 interface FormData {
   firstName: string
@@ -31,7 +32,7 @@ interface FormData {
 }
 
 const SignUp: React.FC = () => {
-  const navigate = useNavigate()
+  const {navigateTo, createHandler} = useCustomNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const {register, handleSubmit} = useForm<FormData>()
 
@@ -41,7 +42,7 @@ const SignUp: React.FC = () => {
   }
 
   function onSubmit(data: FormData) {
-    navigate(PATHS.LOGIN)
+    navigateTo(PATHS.LOGIN)
   }
 
   function togglePasswordVisibility() {
@@ -72,6 +73,14 @@ const SignUp: React.FC = () => {
             component="form"
             onSubmit={handleSubmit(onSubmit)}
           >
+            <Grid item>
+              <ChevronLeftIcon
+                onClick={createHandler(PATHS.MAIN)}
+                sx={{
+                  cursor: 'pointer',
+                }}
+              />
+            </Grid>
             <Grid item>
               <FormLabel
                 sx={{
@@ -191,7 +200,10 @@ const SignUp: React.FC = () => {
                 style={{
                   width: '500px',
                   height: 'auto',
+                  cursor: 'pointer',
+                  userSelect: 'none',
                 }}
+                onClick={createHandler(PATHS.MAIN)}
                 src={LogoImage}
                 alt="Parintins Digital"
               />

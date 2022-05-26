@@ -5,32 +5,30 @@ import LogoImage from '../../assets/Logo-v2.png'
 import {useNavigate} from 'react-router-dom'
 import {PATHS} from '../../routes'
 import {UserService} from '../../services/UserService'
+import {useCustomNavigate} from '../../hooks/useRedirect'
 
 const userService = new UserService()
 
 const Header: React.FC = () => {
-  const navigate = useNavigate()
+  const {navigateTo, createHandler} = useCustomNavigate()
 
   function handleLogout() {
     userService.logout()
-    navigate(PATHS.LOGIN)
-  }
-
-  function handleLogoClick() {
-    navigate(PATHS.LOGIN)
+    navigateTo(PATHS.MAIN)
   }
 
   return (
     <AppBar
       sx={{
         zIndex: 1,
+        boxShadow: 1,
       }}
     >
       <Toolbar>
         <img
           src={LogoImage}
           alt="Logo"
-          onClick={handleLogoClick}
+          onClick={createHandler(PATHS.MAIN)}
           style={{
             width: '100px',
             height: 'auto',

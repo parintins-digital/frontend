@@ -13,8 +13,9 @@ import {
 import GoogleIcon from '@mui/icons-material/Google'
 import {colors} from '../../colors'
 
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import LogoImage from '../../assets/Logo.png'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {PathBuilder} from '../../utils/PathBuilder'
 import {API_URL} from '../../Constants'
@@ -22,6 +23,7 @@ import {Visibility, VisibilityOff} from '@mui/icons-material'
 import {useState} from 'react'
 import {useForm} from 'react-hook-form'
 import {PATHS} from '../../routes'
+import {useCustomNavigate} from '../../hooks/useRedirect'
 
 interface FormData {
   email: string
@@ -29,7 +31,7 @@ interface FormData {
 }
 
 const Login: React.FC = () => {
-  const navigate = useNavigate()
+  const {navigateTo, createHandler} = useCustomNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const {register, handleSubmit} = useForm<FormData>()
 
@@ -43,7 +45,7 @@ const Login: React.FC = () => {
   }
 
   function onSubmit(data: FormData) {
-    navigate(PATHS.HOMEPAGE)
+    navigateTo(PATHS.HOMEPAGE)
   }
 
   return (
@@ -70,6 +72,14 @@ const Login: React.FC = () => {
             component="form"
             onSubmit={handleSubmit(onSubmit)}
           >
+            <Grid item>
+              <ChevronLeftIcon
+                onClick={createHandler(PATHS.MAIN)}
+                sx={{
+                  cursor: 'pointer',
+                }}
+              />
+            </Grid>
             <Grid item>
               <FormLabel
                 sx={{
@@ -174,7 +184,10 @@ const Login: React.FC = () => {
                 style={{
                   width: '500px',
                   height: 'auto',
+                  cursor: 'pointer',
+                  userSelect: 'none',
                 }}
+                onClick={createHandler(PATHS.MAIN)}
                 src={LogoImage}
                 alt="Parintins Digital"
               />

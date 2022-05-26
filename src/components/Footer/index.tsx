@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
       justifyContent="space-between"
       mt="auto"
     >
-      <Typography component="label" variant="body2" color={colors.disable}>
+      <Typography component="label" variant="body2" color={colors.default}>
         Parintins Digital | {new Date().getFullYear()}
       </Typography>
     </Grid>

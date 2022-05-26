@@ -1,7 +1,7 @@
 export function dateTimeFrom(date: Date): string {
   const time = timeFrom(date)
   const day = dateFrom(date)
-  return `${time}, ${day}`
+  return `${day} às ${time}`
 }
 
 export function dateFrom(date: Date): string {

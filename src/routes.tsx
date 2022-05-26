@@ -1,11 +1,15 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import RequireAuth from './components/RequireAuth'
 import Homepage from './pages/Homepage'
 import Login from './pages/Login'
+import Main from './pages/Main'
 import SignUp from './pages/SignUp'
 
 export enum PATHS {
-  LOGIN = '/',
+  MAIN = '/',
+  LOGIN = '/login',
   HOMEPAGE = '/homepage',
+  HOMEPAGE_REGISTRY_VISIT = '/homepage/:pictureId',
   SIGNUP = '/signup',
 }
 
@@ -13,9 +17,13 @@ const Router: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path={PATHS.MAIN} element={<Main />} />
         <Route path={PATHS.LOGIN} element={<Login />} />
         <Route path={PATHS.SIGNUP} element={<SignUp />} />
-        <Route path={PATHS.HOMEPAGE} element={<Homepage />} />
+        <Route element={<RequireAuth />}>
+          <Route path={PATHS.HOMEPAGE} element={<Homepage />} />
+          <Route path={PATHS.HOMEPAGE_REGISTRY_VISIT} element={<Homepage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )

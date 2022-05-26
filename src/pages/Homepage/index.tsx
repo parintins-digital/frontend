@@ -26,6 +26,8 @@ import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
+import {useParams} from 'react-router-dom'
+import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 
 enum Tabs {
   HOME,
@@ -37,8 +39,10 @@ enum Tabs {
 }
 
 const Homepage: React.FC = () => {
-  const pictureModal = useRef<PictureProps>(null)
+  const {pictureId} = useParams()
   const {changeTab, getCurrentTab} = useTab(Tabs.HOME)
+  const pictureModal = useRef<PictureProps>(null)
+  const visitModal = useRef<VisitProps>(null)
 
   function handleCreatePicture() {
     pictureModal.current?.open()
@@ -216,6 +220,7 @@ const Homepage: React.FC = () => {
         </Box>
       </Box>
       <PictureModal ref={pictureModal} />
+      {pictureId && <VisitModal ref={visitModal} pictureId={pictureId} />}
     </Grid>
   )
 }

@@ -39,8 +39,8 @@ export class PictureService {
     return updatedPicture
   }
 
-  async findById(id: string): Promise<Picture> {
-    const {data: picture} = await api.get<Picture>(
+  async findById(id: string): Promise<Picture | undefined> {
+    const {data: picture} = await api.get<Picture | undefined>(
       new PathBuilder(PATH).addPath(id).build()
     )
     return picture
