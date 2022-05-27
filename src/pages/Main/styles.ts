@@ -44,6 +44,7 @@ export const Container = styled.div`
       rgba(2, 0, 36, 1) 100%
     );
     padding: 48px;
+    border-radius: 0px 0px 24% 24%;
 
     .title {
       font-size: 40pt;
