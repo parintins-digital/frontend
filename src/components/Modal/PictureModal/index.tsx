@@ -1,18 +1,4 @@
-import React, {
-  ChangeEvent,
-  forwardRef,
-  useCallback,
-  useContext,
-  useImperativeHandle,
-  useState,
-} from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Modal from '@mui/material/Modal'
-import {useForm} from 'react-hook-form'
-import {CategoryType, Picture} from '../../../entities/Picture'
-import {PictureService} from '../../../services/PictureService'
+import CloseIcon from '@mui/icons-material/Close'
 import {
   FormControl,
   Input,
@@ -22,17 +8,33 @@ import {
   SxProps,
   Theme,
 } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
+import Typography from '@mui/material/Typography'
+import React, {
+  ChangeEvent,
+  forwardRef,
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useState,
+} from 'react'
+import {useForm} from 'react-hook-form'
 import {ToastContext} from '../../../contexts/Toast'
+import {CategoryType, Picture} from '../../../entities/Picture'
+import {PictureService} from '../../../services/PictureService'
 
 const style: SxProps<Theme> = {
-  position: 'absolute' as const,
+  position: 'absolute',
   top: '50%',
   left: '50%',
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: {xs: '100vw', md: '50vw'},
+  height: {xs: '100vh', md: 'auto'},
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -123,11 +125,14 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-        >
+        <CloseIcon
+          onClick={handleClose}
+          sx={{
+            marginLeft: 'auto',
+            cursor: 'pointer',
+          }}
+        />
+        <Typography id="modal-modal-title" variant="h6" component="h2">
           Cadastrar uma nova figura
         </Typography>
         <form
@@ -136,17 +141,11 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
         >
           <FormControl fullWidth>
             <InputLabel htmlFor="title">Título</InputLabel>
-            <Input
-              fullWidth
-              {...register('title')}
-            />
+            <Input fullWidth {...register('title')} />
           </FormControl>
           <FormControl fullWidth>
             <InputLabel htmlFor="description">Descrição</InputLabel>
-            <Input
-              fullWidth
-              {...register('description')}
-            />
+            <Input fullWidth {...register('description')} />
           </FormControl>
 
           <FormControl fullWidth>
@@ -165,18 +164,11 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
             </Select>
           </FormControl>
 
-          <Typography
-            variant="body1"
-            component="div"
-          >
+          <Typography variant="body1" component="div">
             Faça o upload de uma imagem:
           </Typography>
 
-          <input
-            type="file"
-            name="image"
-            onChange={handleFileChange}
-          />
+          <input type="file" name="image" onChange={handleFileChange} />
 
           {imageURL && (
             <>

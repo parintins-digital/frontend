@@ -1,12 +1,11 @@
 import {createTheme, CssBaseline} from '@mui/material'
 import {ThemeProvider} from '@mui/system'
+import {colors} from './colors'
 import {DOMAIN} from './Constants'
 import AuthenticationProvider from './contexts/Authentication'
 import ToastProvider from './contexts/Toast'
-import Router from './routes'
-
 import './global-styles.css'
-import {colors} from './colors'
+import Router from './routes'
 
 const theme = createTheme({
   palette: {

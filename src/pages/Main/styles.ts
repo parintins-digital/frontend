@@ -1,14 +1,18 @@
-import {color} from '@mui/system'
 import styled from 'styled-components'
 import {colors} from '../../colors'
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 
   a {
     text-decoration: none;
     color: black;
+  }
+
+  iframe {
+    width: 100%;
   }
 
   .header {
@@ -35,7 +39,6 @@ export const Container = styled.div`
     color: white;
     display: flex;
     flex-direction: column;
-    height: 60vh;
     position: relative;
     background: ${colors.primary};
     background: linear-gradient(
@@ -48,7 +51,7 @@ export const Container = styled.div`
 
     .title {
       font-size: 40pt;
-      line-height: 16px;
+      /* line-height: 16px; */
     }
 
     .subtitle {
@@ -98,13 +101,19 @@ export const Container = styled.div`
   }
 
   .main .about .divisor {
-    padding: 8px 0px;
+    padding: 16px;
     color: ${colors.secondaryContrast};
     background-color: ${colors.secondary};
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
+
+    .map {
+      width: 60%;
+      height: 500px;
+    }
   }
 
   .footer {
@@ -113,5 +122,53 @@ export const Container = styled.div`
     padding: 16px 48px;
     display: flex;
     justify-content: space-between;
+  }
+`
+
+export const ContainerResponsive = styled.div`
+  width: 100vw;
+  @media (max-width: 768px) {
+    .main .introduction {
+      border-radius: 0;
+    }
+    .header {
+      display: none;
+    }
+    .main .about {
+      .cards {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .divisor {
+        .map {
+          width: 90vw;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 320px) {
+    .main .introduction {
+      .button-group {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .main .about {
+      .divisor {
+        padding: 8px;
+        .map {
+          width: 100vw;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1440px) and (min-width: 1025px) {
+    .footer {
+      margin-top: auto;
+    }
   }
 `

@@ -1,11 +1,10 @@
+import LogoutIcon from '@mui/icons-material/Logout'
 import {AppBar, Button, Toolbar} from '@mui/material'
 import React from 'react'
-import LogoutIcon from '@mui/icons-material/Logout'
 import LogoImage from '../../assets/Logo-v2.png'
-import {useNavigate} from 'react-router-dom'
+import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
 import {UserService} from '../../services/UserService'
-import {useCustomNavigate} from '../../hooks/useRedirect'
 
 const userService = new UserService()
 
@@ -19,6 +18,7 @@ const Header: React.FC = () => {
 
   return (
     <AppBar
+      color="secondary"
       sx={{
         zIndex: 1,
         boxShadow: 1,
@@ -37,7 +37,7 @@ const Header: React.FC = () => {
         />
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           onClick={handleLogout}
           startIcon={<LogoutIcon />}
           sx={{

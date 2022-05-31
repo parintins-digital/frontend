@@ -1,5 +1,10 @@
+import CloseIcon from '@mui/icons-material/Close'
+import {SxProps, Theme} from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
+import Typography from '@mui/material/Typography'
 import React, {
-  ChangeEvent,
   forwardRef,
   useCallback,
   useContext,
@@ -7,27 +12,13 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Modal from '@mui/material/Modal'
-import {useForm} from 'react-hook-form'
-import {CategoryType, Picture} from '../../../entities/Picture'
-import {PictureService} from '../../../services/PictureService'
-import {
-  FormControl,
-  Input,
-  InputLabel,
-  MenuItem,
-  Select,
-  SxProps,
-  Theme,
-} from '@mui/material'
-import {ToastContext} from '../../../contexts/Toast'
-import {useLoading} from '../../../hooks/useLoading'
-import {VisitService} from '../../../services/VisitService'
-import {dateFrom, dateTimeFrom, timeFrom} from '../../../utils/FormatDateTime'
 import {colors} from '../../../colors'
+import {ToastContext} from '../../../contexts/Toast'
+import {Picture} from '../../../entities/Picture'
+import {useLoading} from '../../../hooks/useLoading'
+import {PictureService} from '../../../services/PictureService'
+import {VisitService} from '../../../services/VisitService'
+import {dateFrom, dateTimeFrom} from '../../../utils/FormatDateTime'
 
 const style: SxProps<Theme> = {
   position: 'absolute' as const,
@@ -37,7 +28,8 @@ const style: SxProps<Theme> = {
   flexDirection: 'column',
   gap: 2,
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: {xs: '100vw', md: '50vw'},
+  height: {xs: '100vh', md: 'auto'},
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -133,6 +125,13 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
+        <CloseIcon
+          onClick={handleClose}
+          sx={{
+            marginLeft: 'auto',
+            cursor: 'pointer',
+          }}
+        />
         <Typography variant="h6" component="h2">
           Registrar uma visita
         </Typography>

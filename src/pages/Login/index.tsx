@@ -1,6 +1,8 @@
+import {Visibility, VisibilityOff} from '@mui/icons-material'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import GoogleIcon from '@mui/icons-material/Google'
 import {
   Button,
-  Divider,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -10,20 +12,15 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material'
-import GoogleIcon from '@mui/icons-material/Google'
-import {colors} from '../../colors'
-
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import LogoImage from '../../assets/Logo.png'
-import {Link} from 'react-router-dom'
-import LoginVideo from '../../assets/Video.mp4'
-import {PathBuilder} from '../../utils/PathBuilder'
-import {API_URL} from '../../Constants'
-import {Visibility, VisibilityOff} from '@mui/icons-material'
 import {useState} from 'react'
 import {useForm} from 'react-hook-form'
-import {PATHS} from '../../routes'
+import {Link} from 'react-router-dom'
+import LoginVideo from '../../assets/Video.mp4'
+import {colors} from '../../colors'
+import {API_URL} from '../../Constants'
 import {useCustomNavigate} from '../../hooks/useRedirect'
+import {PATHS} from '../../routes'
+import {PathBuilder} from '../../utils/PathBuilder'
 
 interface FormData {
   email: string
@@ -60,137 +57,94 @@ const Login: React.FC = () => {
         <Grid
           container
           direction="row"
-          width="60%"
           bgcolor={colors.backgroundElement}
+          sx={{
+            width: {xs: '100vw', md: '50vw'},
+            height: {xs: '100vh', md: 'auto'},
+          }}
         >
           <Grid
             container
-            lg={6}
             padding={4}
             borderRadius={2}
-            gap={2}
+            gap={1}
             component="form"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Grid item>
-              <ChevronLeftIcon
-                onClick={createHandler(PATHS.MAIN)}
-                sx={{
-                  cursor: 'pointer',
-                }}
+            <ChevronLeftIcon
+              onClick={createHandler(PATHS.MAIN)}
+              sx={{
+                cursor: 'pointer',
+              }}
+            />
+            <FormLabel
+              sx={{
+                fontWeight: 'bold',
+              }}
+            >
+              Fazer Login
+            </FormLabel>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="email">E-mail</InputLabel>
+              <Input fullWidth type="email" id="email" {...register('email')} />
+              <FormHelperText>Ex: meu.email@meudominio.com.br</FormHelperText>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="password">Senha</InputLabel>
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                {...register('password')}
+                endAdornment={
+                  <InputAdornment
+                    position="end"
+                    sx={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {showPassword ? (
+                      <VisibilityOff onClick={togglePasswordVisibility} />
+                    ) : (
+                      <Visibility onClick={togglePasswordVisibility} />
+                    )}
+                  </InputAdornment>
+                }
               />
+            </FormControl>
+            <Grid container direction="column" alignItems="center" gap={2}>
+              <Grid item>
+                <Button type="submit" variant="contained" color="primary">
+                  Entrar
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <FormLabel
+            <Grid container direction="column" alignItems="center" gap={2}>
+              <Grid item sx={{marginTop: 2, marginBottom: 2}}>
+                <FormLabel>Ou</FormLabel>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleGoogleAuth}
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<GoogleIcon />}
+                >
+                  Entrar Com Google
+                </Button>
+              </Grid>
+              <Grid
+                item
                 sx={{
-                  fontWeight: 'bold',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
                 }}
               >
-                Fazer Login
-              </FormLabel>
-            </Grid>
-            <Grid item lg={12}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="email">E-mail</InputLabel>
-                <Input
-                  fullWidth
-                  type="email"
-                  id="email"
-                  {...register('email')}
-                />
-                <FormHelperText>Ex: meu.email@meudominio.com.br</FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item lg={12}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="password">Senha</InputLabel>
-                <Input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  {...register('password')}
-                  endAdornment={
-                    <InputAdornment
-                      position="end"
-                      sx={{
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {showPassword ? (
-                        <VisibilityOff onClick={togglePasswordVisibility} />
-                      ) : (
-                        <Visibility onClick={togglePasswordVisibility} />
-                      )}
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </Grid>
-            <Grid item lg={12}>
-              <Grid container direction="column" alignItems="center" gap={2}>
-                <Grid item>
-                  <Button type="submit" variant="contained" color="primary">
-                    Entrar
-                  </Button>
-                </Grid>
+                <Typography variant="body2" component="label">
+                  Ainda não possui uma conta?{' '}
+                  <Link to={PATHS.SIGNUP}>Clique aqui para se inscrever.</Link>
+                </Typography>
               </Grid>
-            </Grid>
-
-            <Grid item lg={12}>
-              <Divider />
-            </Grid>
-            <Grid item lg={12}>
-              <Grid container direction="column" alignItems="center" gap={2}>
-                <Grid item>
-                  <FormLabel>Ou</FormLabel>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={handleGoogleAuth}
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<GoogleIcon />}
-                  >
-                    Entrar Com Google
-                  </Button>
-                </Grid>
-                <Grid
-                  item
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                  }}
-                >
-                  <Typography variant="body2" component="label">
-                    Ainda não possui uma conta?{' '}
-                    <Link to={PATHS.SIGNUP}>
-                      Clique aqui para se inscrever.
-                    </Link>
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            lg={4}
-            justifyContent="center"
-            alignItems="center"
-            bgcolor={colors.backgroundElement}
-          >
-            <Grid item lg={12}>
-              <img
-                style={{
-                  width: '500px',
-                  height: 'auto',
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                }}
-                onClick={createHandler(PATHS.MAIN)}
-                src={LogoImage}
-                alt="Parintins Digital"
-              />
             </Grid>
           </Grid>
         </Grid>
@@ -205,8 +159,9 @@ const Login: React.FC = () => {
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '100%',
-          height: 'auto',
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'cover',
           zIndex: -1,
         }}
         autoPlay

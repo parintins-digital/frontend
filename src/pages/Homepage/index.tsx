@@ -1,4 +1,13 @@
+import AccountTreeIcon from '@mui/icons-material/AccountTree'
+import AddIcon from '@mui/icons-material/Add'
+import HolidayVillageIcon from '@mui/icons-material/HolidayVillage'
+import HomeIcon from '@mui/icons-material/Home'
+import LocationCityIcon from '@mui/icons-material/LocationCity'
+import TheaterComedyIcon from '@mui/icons-material/TheaterComedy'
+import TheatersIcon from '@mui/icons-material/Theaters'
 import {
+  BottomNavigation,
+  BottomNavigationAction,
   Box,
   Divider,
   Drawer,
@@ -10,24 +19,15 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-
-import TheaterComedyIcon from '@mui/icons-material/TheaterComedy'
-import TheatersIcon from '@mui/icons-material/Theaters'
-import LocationCityIcon from '@mui/icons-material/LocationCity'
-import HolidayVillageIcon from '@mui/icons-material/HolidayVillage'
-import HomeIcon from '@mui/icons-material/Home'
-import AddIcon from '@mui/icons-material/Add'
-import AccountTreeIcon from '@mui/icons-material/AccountTree'
-
-import {useTab} from '../../hooks/useTab'
-import PictureModal, {PictureProps} from '../../components/Modal/PictureModal'
 import {useRef} from 'react'
+import {useParams} from 'react-router-dom'
+import Footer from '../../components/Footer'
+import Header from '../../components/Header'
+import PictureModal, {PictureProps} from '../../components/Modal/PictureModal'
+import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
-import {useParams} from 'react-router-dom'
-import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
+import {useTab} from '../../hooks/useTab'
 
 enum Tabs {
   HOME,
@@ -36,6 +36,7 @@ enum Tabs {
   POINT,
   PERSONALIDADES,
   VISITAS,
+  CRIAR_FIGURA,
 }
 
 const Homepage: React.FC = () => {
@@ -219,6 +220,49 @@ const Homepage: React.FC = () => {
           <Footer />
         </Box>
       </Box>
+      <Box
+        sx={{
+          display: {
+            xl: 'none',
+            lg: 'none',
+            md: 'initial',
+            sm: 'initial',
+            xs: 'initial',
+          },
+          position: 'fixed',
+          bottom: '0',
+          width: '100vw',
+        }}
+      >
+        <BottomNavigation
+          showLabels
+          value={getCurrentTab()}
+          onChange={(_, newValue) => {
+            if (newValue === Tabs.CRIAR_FIGURA) {
+              handleCreatePicture()
+            } else {
+              changeTab(newValue)
+            }
+          }}
+        >
+          <BottomNavigationAction
+            value={Tabs.HOME}
+            label="Início"
+            icon={<HomeIcon />}
+          />
+          <BottomNavigationAction
+            value={Tabs.VISITAS}
+            label="Visitas"
+            icon={<AccountTreeIcon />}
+          />
+          <BottomNavigationAction
+            value={Tabs.CRIAR_FIGURA}
+            label="Criar Figura"
+            icon={<AddIcon />}
+          />
+        </BottomNavigation>
+      </Box>
+
       <PictureModal ref={pictureModal} />
       {pictureId && <VisitModal ref={visitModal} pictureId={pictureId} />}
     </Grid>

@@ -6,8 +6,6 @@ const RequireAuth: React.FC = () => {
   const {isAuthenticated} = useAuth()
   const location = useLocation()
 
-  console.log(isAuthenticated)
-
   if (isAuthenticated) {
     return <Outlet />
   } else {

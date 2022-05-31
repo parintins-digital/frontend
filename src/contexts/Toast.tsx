@@ -41,11 +41,7 @@ const ToastProvider: React.FC<Props> = ({children}: Props) => {
         onClose={closeToast}
       >
         {type !== 'awaiting' ? (
-          <Alert
-            onClose={closeToast}
-            severity={type}
-            sx={{width: '100%'}}
-          >
+          <Alert onClose={closeToast} severity={type} sx={{width: '100%'}}>
             {message}
           </Alert>
         ) : (
