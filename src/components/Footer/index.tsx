@@ -9,6 +9,15 @@ const Footer: React.FC = () => {
       alignItems="center"
       justifyContent="space-between"
       mt="auto"
+      sx={{
+        display: {
+          xl: 'initial',
+          lg: 'initial',
+          md: 'none',
+          sm: 'none',
+          xs: 'none',
+        },
+      }}
     >
       <Typography component="label" variant="body2" color={colors.default}>
         Parintins Digital | {new Date().getFullYear()}

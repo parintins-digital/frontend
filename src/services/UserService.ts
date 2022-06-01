@@ -1,22 +1,35 @@
 import api from '../api'
 import {User} from '../entities/User'
 import {PathBuilder} from '../utils/PathBuilder'
+import {
+  clearCookies,
+  clearSessionStorage,
+  getSessionStorage,
+  saveSessionStorage,
+  verifyIfCookieExists,
+} from './StorageService'
 
 const PATH = '/user'
+const AUTH_COOKIE = 'connect.sid'
+const LOCAL_USER_SYSTEM = 'parintinsuser'
 
 export class UserService {
   getAuthenticatedUser(): User | undefined {
-    const localData = localStorage.getItem('user')
-    if (!localData) {
+    const user = getSessionStorage<User>(LOCAL_USER_SYSTEM)
+    if (!user) {
       console.error('[Autenticação] Usuário sem as credenciais necessárias.')
       return
     }
-    const authenticatedUser = JSON.parse(localData) as User
-    return authenticatedUser
+    return user
+  }
+
+  isAuthenticated(): boolean {
+    return verifyIfCookieExists(AUTH_COOKIE)
   }
 
   logout(): void {
-    localStorage.clear()
+    clearCookies()
+    clearSessionStorage()
   }
 
   async create(user: User): Promise<User> {
@@ -27,11 +40,32 @@ export class UserService {
     return createdUser
   }
 
-  async login(email: string, password: string): Promise<User> {
-    const {data: user} = await api.post<User>(
-      new PathBuilder(PATH).addPath('login').build(),
-      {email, password}
+  async findCurrentUser(): Promise<User> {
+    const {data: authenticatedUser} = await api.get<User>(
+      new PathBuilder(PATH).build()
     )
-    return user
+    return authenticatedUser
+  }
+
+  async login(email: string, password: string): Promise<User> {
+    await api.post(new PathBuilder(PATH).addPath('login').build(), {
+      email,
+      password,
+    })
+    const authenticatedUser = await this.findCurrentUser()
+    saveSessionStorage(LOCAL_USER_SYSTEM, authenticatedUser)
+    return authenticatedUser
+  }
+
+  async loginAsAdmin(email: string, password: string): Promise<User> {
+    await api.post(
+      new PathBuilder(PATH).addPath('login').addPath('admin').build(),
+      {
+        email,
+        password,
+      }
+    )
+    const authenticatedUser = await this.findCurrentUser()
+    return authenticatedUser
   }
 }

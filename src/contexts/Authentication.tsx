@@ -5,7 +5,9 @@ import {UserService} from '../services/UserService'
 interface AuthProps {
   getAuthenticatedUser: () => User | undefined
   login: (email: string, password: string) => Promise<User>
+  loginAsAdmin: (email: string, password: string) => Promise<User>
   logout: () => void
+  isAuthenticated: () => boolean
 }
 
 export const AuthContext = createContext<AuthProps>({} as AuthProps)
@@ -27,12 +29,30 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     return user
   }
 
+  async function loginAsAdmin(email: string, password: string): Promise<User> {
+    const user = await userService.loginAsAdmin(email, password)
+    return user
+  }
+
   function logout() {
     userService.logout()
   }
 
+  function isAuthenticated() {
+    // return true
+    return userService.isAuthenticated()
+  }
+
   return (
-    <AuthContext.Provider value={{getAuthenticatedUser, login, logout}}>
+    <AuthContext.Provider
+      value={{
+        getAuthenticatedUser,
+        login,
+        logout,
+        isAuthenticated,
+        loginAsAdmin,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

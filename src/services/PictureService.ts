@@ -17,8 +17,40 @@ export class PictureService {
   }
 
   async fetch(): Promise<Picture[]> {
-    const {data: pictures} = await api.get(new PathBuilder(PATH).build())
-    return pictures
+    // const {data: pictures} = await api.get(new PathBuilder(PATH).build())
+    // return pictures
+    return [
+      {
+        id: '123',
+        category: 'ATTRACTION',
+        description: 'Teste de descrição',
+        title: 'Ola mundo',
+      },
+      {
+        id: '123',
+        category: 'COMMUNITY',
+        description: 'Teste de descrição',
+        title: 'Ola mundo',
+      },
+      {
+        id: '123',
+        category: 'CULTURE',
+        description: 'Teste de descrição',
+        title: 'Ola mundo',
+      },
+      {
+        id: '123',
+        category: 'LANDMARK',
+        description: 'Teste de descrição',
+        title: 'Ola mundo',
+      },
+      {
+        id: '1234',
+        category: 'ATTRACTION',
+        description: 'Teste de descrição',
+        title: 'Ola mundo',
+      },
+    ]
   }
 
   async create(picture: Picture): Promise<Picture> {

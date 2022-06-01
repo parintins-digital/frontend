@@ -1,24 +1,25 @@
-import {styled} from '@mui/material/styles'
+import {Download} from '@mui/icons-material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import {Button} from '@mui/material'
 import Card from '@mui/material/Card'
-import CardMedia from '@mui/material/CardMedia'
-import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
 import Collapse from '@mui/material/Collapse'
 import IconButton, {IconButtonProps} from '@mui/material/IconButton'
+import {styled} from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import {Picture as PictureEntity} from '../../entities/Picture'
 import {QRCodeCanvas} from 'qrcode.react'
-
+import {useState} from 'react'
+import DefaultPicture from '../../assets/DefaultPicture.svg'
+import {DOMAIN} from '../../Constants'
+import {Picture as PictureEntity} from '../../entities/Picture'
+import {PathBuilder} from '../../utils/PathBuilder'
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
 }
-
-import DefaultPicture from '../../assets/DefaultPicture.svg'
-import {Download} from '@mui/icons-material'
-import {useState} from 'react'
-import {DOMAIN} from '../../Constants'
-import {PathBuilder} from '../../utils/PathBuilder'
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const {expand, ...other} = props
@@ -32,10 +33,12 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }))
 
 interface Props {
+  onDelete: (id: string) => void
+  onEdit: (id: string) => void
   picture: PictureEntity
 }
 
-const Picture: React.FC<Props> = ({picture}: Props) => {
+const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
   const [expanded, setExpanded] = useState(false)
 
   const qrCodeURL = new PathBuilder(DOMAIN)
@@ -62,7 +65,7 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
     <Card sx={{maxWidth: 345}}>
       <CardMedia
         component="img"
-        height="194"
+        height="100"
         image={
           picture.image ? URL.createObjectURL(picture.image) : DefaultPicture
         }
@@ -77,6 +80,24 @@ const Picture: React.FC<Props> = ({picture}: Props) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
+        <Button
+          onClick={() => {
+            if (picture.id) onEdit(picture.id)
+          }}
+          color="primary"
+          variant="text"
+        >
+          <EditIcon />
+        </Button>
+        <Button
+          onClick={() => {
+            if (picture.id) onDelete(picture.id)
+          }}
+          color="primary"
+          variant="text"
+        >
+          <DeleteIcon />
+        </Button>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

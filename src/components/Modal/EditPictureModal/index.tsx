@@ -41,8 +41,8 @@ const style: SxProps<Theme> = {
   borderRadius: 1,
 }
 
-export interface PictureProps {
-  open: () => void
+export interface EditPictureProps {
+  open: (id: string) => void
   close: () => void
 }
 
@@ -54,19 +54,32 @@ interface FormData {
 
 const pictureService = new PictureService()
 
-const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
+const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
+  _,
+  ref
+) => {
   const [open, setOpen] = React.useState(false)
   const [imageURL, setImageURL] = useState<string>()
   const {showToast} = useContext(ToastContext)
   const {register, handleSubmit, reset} = useForm<FormData>()
+  const [picture, setPicture] = useState<Picture>()
+
+  async function fetchPicture(id: string) {
+    const newPicture = await pictureService.findById(id)
+    if (!newPicture) throw new Error(`Picture with ${id} not exists.`)
+    setPicture(newPicture)
+    if (newPicture.image) setImageURL(URL.createObjectURL(newPicture.image))
+  }
 
   function handleReset() {
     reset()
     setImageURL(undefined)
   }
 
-  const handleOpen = useCallback(() => {
-    setOpen(true)
+  const handleOpen = useCallback((id: string) => {
+    fetchPicture(id).then(() => {
+      setOpen(true)
+    })
   }, [])
 
   const handleClose = useCallback(() => {
@@ -75,6 +88,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
   }, [])
 
   async function onSubmit(data: FormData) {
+    if (!picture || !picture.id) return
     let fileImage: File | undefined
     const {category, description, title} = data
 
@@ -84,7 +98,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
       fileImage = new File([blob], `${data.title}.jpeg`)
     }
 
-    const newPicture: Picture = {
+    const updatedPicture: Picture = {
       image: fileImage,
       description: description,
       title: title,
@@ -92,7 +106,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
     }
 
     await pictureService
-      .create(newPicture)
+      .update(picture.id, updatedPicture)
       .then(() => {
         showToast('Figura cadastrada com sucesso.', 'success')
       })
@@ -112,7 +126,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
     setImageURL(undefined)
   }
 
-  useImperativeHandle<Record<string, any>, PictureProps>(ref, () => ({
+  useImperativeHandle<Record<string, any>, EditPictureProps>(ref, () => ({
     open: handleOpen,
     close: handleClose,
   }))
@@ -141,11 +155,19 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
         >
           <FormControl fullWidth>
             <InputLabel htmlFor="title">Título</InputLabel>
-            <Input fullWidth {...register('title')} />
+            <Input
+              fullWidth
+              defaultValue={picture?.title || ''}
+              {...register('title')}
+            />
           </FormControl>
           <FormControl fullWidth>
             <InputLabel htmlFor="description">Descrição</InputLabel>
-            <Input fullWidth {...register('description')} />
+            <Input
+              defaultValue={picture?.description || ''}
+              fullWidth
+              {...register('description')}
+            />
           </FormControl>
 
           <FormControl fullWidth>
@@ -153,7 +175,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
             <Select
               {...register('category')}
               label="Categoria"
-              defaultValue="ATTRACTION"
+              defaultValue={picture?.category || 'ATTRACTION'}
             >
               <MenuItem value={'ATTRACTION'}>Pontos Turísticos</MenuItem>
               <MenuItem value={'CULTURE'}>Cultura</MenuItem>
@@ -195,7 +217,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
             type="submit"
             sx={{alignSelf: 'center'}}
           >
-            CADASTRAR
+            ATUALIZAR
           </Button>
         </form>
       </Box>
@@ -203,4 +225,4 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
   )
 }
 
-export default forwardRef(PictureModal)
+export default forwardRef(EditPictureModal)

@@ -19,15 +19,24 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import {useRef} from 'react'
+import {useContext, useRef} from 'react'
 import {useParams} from 'react-router-dom'
+import ConfirmDialogue, {
+  ConfirmDialogueProps,
+} from '../../components/Dialogue/ConfirmDialogue'
 import Footer from '../../components/Footer'
 import Header from '../../components/Header'
+import EditPictureModal, {
+  EditPictureProps,
+} from '../../components/Modal/EditPictureModal'
 import PictureModal, {PictureProps} from '../../components/Modal/PictureModal'
 import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
+import {ToastContext} from '../../contexts/Toast'
+import {useLoading} from '../../hooks/useLoading'
 import {useTab} from '../../hooks/useTab'
+import {PictureService} from '../../services/PictureService'
 
 enum Tabs {
   HOME,
@@ -39,14 +48,50 @@ enum Tabs {
   CRIAR_FIGURA,
 }
 
+const pictureService = new PictureService()
+
 const Homepage: React.FC = () => {
   const {pictureId} = useParams()
   const {changeTab, getCurrentTab} = useTab(Tabs.HOME)
   const pictureModal = useRef<PictureProps>(null)
+  const editPictureModal = useRef<EditPictureProps>(null)
+  const confirmDialogue = useRef<ConfirmDialogueProps>(null)
   const visitModal = useRef<VisitProps>(null)
+  const {showToast} = useContext(ToastContext)
+  const deletePictureLoading = useLoading(
+    deletePicture,
+    'Aguarde um momento. Deletando figura...',
+    false
+  )
 
   function handleCreatePicture() {
     pictureModal.current?.open()
+  }
+
+  function handleEditPicture(id: string) {
+    editPictureModal.current?.open(id)
+  }
+
+  function handleDeletePicture(id: string) {
+    console.log(id)
+    confirmDialogue.current?.open(
+      console.log,
+      'Você deseja excluir esta figura?'
+    )
+    // confirmDialogue.current?.open((response) => {
+    //   if (response) {
+    //     deletePictureLoading(id)
+    //   }
+    // }, 'Você deseja excluir esta figura?')
+  }
+
+  async function deletePicture(id: string) {
+    try {
+      await pictureService.delete(id)
+      showToast('Figura deletada com sucesso.', 'success')
+    } catch {
+      showToast('Erro ao deletar figura. Por favor, tente novamente.', 'error')
+    }
   }
 
   return (
@@ -148,7 +193,10 @@ const Homepage: React.FC = () => {
                 Início
               </Typography>
 
-              <PicturesList />
+              <PicturesList
+                onEdit={handleEditPicture}
+                onDelete={handleDeletePicture}
+              />
             </>
           )}
           {getCurrentTab() === Tabs.PONTOS_TURISTICOS && (
@@ -162,7 +210,11 @@ const Homepage: React.FC = () => {
                 }}
               />
 
-              <PicturesList filterBy="ATTRACTION" />
+              <PicturesList
+                onEdit={handleEditPicture}
+                onDelete={handleDeletePicture}
+                filterBy="ATTRACTION"
+              />
             </>
           )}
           {getCurrentTab() === Tabs.CULTURA && (
@@ -175,7 +227,11 @@ const Homepage: React.FC = () => {
                   margin: '8px 0px',
                 }}
               />
-              <PicturesList filterBy="CULTURE" />
+              <PicturesList
+                onEdit={handleEditPicture}
+                onDelete={handleDeletePicture}
+                filterBy="CULTURE"
+              />
             </>
           )}
           {getCurrentTab() === Tabs.POINT && (
@@ -188,7 +244,11 @@ const Homepage: React.FC = () => {
                   margin: '8px 0px',
                 }}
               />
-              <PicturesList filterBy="LANDMARK" />
+              <PicturesList
+                onEdit={handleEditPicture}
+                onDelete={handleDeletePicture}
+                filterBy="LANDMARK"
+              />
             </>
           )}
           {getCurrentTab() === Tabs.PERSONALIDADES && (
@@ -201,7 +261,11 @@ const Homepage: React.FC = () => {
                   margin: '8px 0px',
                 }}
               />
-              <PicturesList filterBy="COMMUNITY" />
+              <PicturesList
+                onEdit={handleEditPicture}
+                onDelete={handleDeletePicture}
+                filterBy="COMMUNITY"
+              />
             </>
           )}
           {getCurrentTab() === Tabs.VISITAS && (
@@ -263,7 +327,9 @@ const Homepage: React.FC = () => {
         </BottomNavigation>
       </Box>
 
+      <ConfirmDialogue ref={confirmDialogue} />
       <PictureModal ref={pictureModal} />
+      <EditPictureModal ref={editPictureModal} />
       {pictureId && <VisitModal ref={visitModal} pictureId={pictureId} />}
     </Grid>
   )

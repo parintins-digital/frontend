@@ -1,6 +1,5 @@
 import {Visibility, VisibilityOff} from '@mui/icons-material'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import GoogleIcon from '@mui/icons-material/Google'
 import {
   Button,
   FormControl,
@@ -10,28 +9,23 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  Typography,
 } from '@mui/material'
 import {useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
-import {Link} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {colors} from '../../colors'
-import {API_URL} from '../../Constants'
 import {useAuth} from '../../hooks/useAuth'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
-import {PathBuilder} from '../../utils/PathBuilder'
 
 interface FormData {
   email: string
   password: string
 }
 
-const Login: React.FC = () => {
-  const {navigateTo, createHandler, navigateToAnotherDomain} =
-    useCustomNavigate()
-  const {login, isAuthenticated} = useAuth()
+const AdminLogin: React.FC = () => {
+  const {navigateTo, createHandler} = useCustomNavigate()
+  const {loginAsAdmin, isAuthenticated} = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const {register, handleSubmit} = useForm<FormData>()
 
@@ -41,17 +35,12 @@ const Login: React.FC = () => {
     }
   }, [])
 
-  function handleGoogleAuth() {
-    const loginURL = new PathBuilder(API_URL).addPath('login').build()
-    navigateToAnotherDomain(loginURL)
-  }
-
   function togglePasswordVisibility() {
     setShowPassword(!showPassword)
   }
 
   function onSubmit(data: FormData) {
-    login(data.email, data.password).then(() => {
+    loginAsAdmin(data.email, data.password).then(() => {
       navigateTo(PATHS.HOMEPAGE)
     })
   }
@@ -93,7 +82,7 @@ const Login: React.FC = () => {
                 fontWeight: 'bold',
               }}
             >
-              Fazer Login
+              Fazer Login (Painel do Administrador)
             </FormLabel>
             <FormControl fullWidth>
               <InputLabel htmlFor="email">E-mail</InputLabel>
@@ -129,34 +118,6 @@ const Login: React.FC = () => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid container direction="column" alignItems="center" gap={2}>
-              <Grid item sx={{marginTop: 2, marginBottom: 2}}>
-                <FormLabel>Ou</FormLabel>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleGoogleAuth}
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<GoogleIcon />}
-                >
-                  Entrar Com Google
-                </Button>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                }}
-              >
-                <Typography variant="body2" component="label">
-                  Ainda não possui uma conta?{' '}
-                  <Link to={PATHS.SIGNUP}>Clique aqui para se inscrever.</Link>
-                </Typography>
-              </Grid>
-            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -181,4 +142,4 @@ const Login: React.FC = () => {
   )
 }
 
-export default Login
+export default AdminLogin
