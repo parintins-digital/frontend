@@ -9,7 +9,6 @@ import {
 } from './StorageService'
 
 const PATH = '/user'
-const AUTH_COOKIE = 'connect.sid'
 const LOCAL_USER_SYSTEM = 'parintinsuser'
 
 export class UserService {

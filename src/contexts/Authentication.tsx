@@ -39,9 +39,8 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
   }
 
   async function isAuthenticated() {
-    return true
-    // const cookieExists = await userService.isAuthenticated()
-    // return cookieExists
+    const cookieExists = await userService.isAuthenticated()
+    return cookieExists
   }
 
   return (

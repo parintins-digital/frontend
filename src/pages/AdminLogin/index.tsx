@@ -30,9 +30,9 @@ const AdminLogin: React.FC = () => {
   const {register, handleSubmit} = useForm<FormData>()
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      navigateTo(PATHS.HOMEPAGE)
-    }
+    isAuthenticated().then((cookieExists) => {
+      if (cookieExists) navigateTo(PATHS.HOMEPAGE)
+    })
   }, [])
 
   function togglePasswordVisibility() {
