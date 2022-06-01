@@ -35,6 +35,9 @@ import EditPictureModal, {
   EditPictureProps,
 } from '../../components/Modal/EditPictureModal'
 import PictureModal, {PictureProps} from '../../components/Modal/PictureModal'
+import ReadQRCodeModal, {
+  ReadQRCodeModalProps,
+} from '../../components/Modal/ReadQRCodeModal'
 import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
@@ -55,6 +58,7 @@ enum Tabs {
   PERSONALIDADES,
   VISITAS,
   CRIAR_FIGURA,
+  CRIAR_VISITA,
 }
 
 const pictureService = new PictureService()
@@ -63,6 +67,7 @@ const Homepage: React.FC = () => {
   const {pictureId} = useParams()
   const {changeTab, getCurrentTab} = useTab(Tabs.HOME)
   const pictureModal = useRef<PictureProps>(null)
+  const readQRCodeModal = useRef<ReadQRCodeModalProps>(null)
   const editPictureModal = useRef<EditPictureProps>(null)
   const confirmDialogue = useRef<ConfirmDialogueProps>(null)
   const visitModal = useRef<VisitProps>(null)
@@ -89,6 +94,10 @@ const Homepage: React.FC = () => {
 
   function handleCreatePicture() {
     pictureModal.current?.open()
+  }
+
+  function handleCreatVisit() {
+    readQRCodeModal.current?.open()
   }
 
   function handleEditPicture(id: string) {
@@ -184,6 +193,12 @@ const Homepage: React.FC = () => {
                   <AccountTreeIcon />
                 </ListItemIcon>
                 <ListItemText primary="Ver histórico de visitas" />
+              </ListItem>
+              <ListItem button onClick={handleCreatVisit}>
+                <ListItemIcon>
+                  <AddIcon />
+                </ListItemIcon>
+                <ListItemText primary="Registrar visita" />
               </ListItem>
             </List>
             <Divider />
@@ -431,6 +446,8 @@ const Homepage: React.FC = () => {
           onChange={(_, newValue) => {
             if (newValue === Tabs.CRIAR_FIGURA) {
               handleCreatePicture()
+            } else if (newValue === Tabs.CRIAR_VISITA) {
+              handleCreatVisit()
             } else {
               changeTab(newValue)
             }
@@ -447,6 +464,11 @@ const Homepage: React.FC = () => {
             icon={<AccountTreeIcon />}
           />
           <BottomNavigationAction
+            value={Tabs.CRIAR_VISITA}
+            label="Registrar Visita"
+            icon={<AddIcon />}
+          />
+          <BottomNavigationAction
             value={Tabs.CRIAR_FIGURA}
             label="Criar Figura"
             icon={<AddIcon />}
@@ -454,6 +476,7 @@ const Homepage: React.FC = () => {
         </BottomNavigation>
       </Box>
 
+      <ReadQRCodeModal ref={readQRCodeModal} />
       <ConfirmDialogue ref={confirmDialogue} />
       <PictureModal ref={pictureModal} />
       <EditPictureModal ref={editPictureModal} />
