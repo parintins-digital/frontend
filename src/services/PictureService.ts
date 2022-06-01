@@ -21,18 +21,10 @@ export class PictureService {
   }
 
   async fetch(filter?: Filter): Promise<Picture[]> {
-    // const {data: pictures} = await api.get(
-    //   new PathBuilder(PATH).addQuery('title', filter?.title).build()
-    // )
-    // return pictures
-    return [
-      {
-        id: '123',
-        category: 'ATTRACTION',
-        description: 'Ola teste',
-        title: 'Teste',
-      },
-    ]
+    const {data: pictures} = await api.get(
+      new PathBuilder(PATH).addQuery('title', filter?.title).build()
+    )
+    return pictures
   }
 
   async create(picture: Picture): Promise<Picture> {
