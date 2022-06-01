@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --mode production",
     "preview": "vite preview",
     "lint": "eslint --ext .ts,.tsx --ignore-path .gitignore --fix src",
     "format": "prettier . --write"

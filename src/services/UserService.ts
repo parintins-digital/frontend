@@ -19,6 +19,14 @@ export class UserService {
     localStorage.clear()
   }
 
+  async create(user: User): Promise<User> {
+    const {data: createdUser} = await api.post<User>(
+      new PathBuilder(PATH).build(),
+      user
+    )
+    return createdUser
+  }
+
   async login(email: string, password: string): Promise<User> {
     const {data: user} = await api.post<User>(
       new PathBuilder(PATH).addPath('login').build(),

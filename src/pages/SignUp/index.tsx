@@ -18,8 +18,10 @@ import {Link} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {colors} from '../../colors'
 import {API_URL} from '../../Constants'
+import {User} from '../../entities/User'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
+import {UserService} from '../../services/UserService'
 import {PathBuilder} from '../../utils/PathBuilder'
 
 interface FormData {
@@ -28,6 +30,8 @@ interface FormData {
   email: string
   password: string
 }
+
+const userService = new UserService()
 
 const SignUp: React.FC = () => {
   const {navigateTo, createHandler} = useCustomNavigate()
@@ -40,7 +44,19 @@ const SignUp: React.FC = () => {
   }
 
   function onSubmit(data: FormData) {
-    navigateTo(PATHS.LOGIN)
+    const {email, firstName, lastName, password} = data
+
+    const newUser: User = {
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      password: password,
+      createdAt: new Date(),
+    }
+
+    userService.create(newUser).then(() => {
+      navigateTo(PATHS.LOGIN)
+    })
   }
 
   function togglePasswordVisibility() {
