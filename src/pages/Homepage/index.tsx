@@ -9,9 +9,14 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
+  debounce,
   Divider,
   Drawer,
+  FormControl,
   Grid,
+  Input,
+  InputLabel,
+  InputProps,
   List,
   ListItem,
   ListItemIcon,
@@ -19,7 +24,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import {useContext, useRef} from 'react'
+import {useContext, useRef, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import ConfirmDialogue, {
   ConfirmDialogueProps,
@@ -34,10 +39,14 @@ import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
 import {ToastContext} from '../../contexts/Toast'
+import {useFilter} from '../../hooks/useFilter'
 import {useLoading} from '../../hooks/useLoading'
 import {useTab} from '../../hooks/useTab'
-import {PictureService} from '../../services/PictureService'
-
+import {
+  Filter as FilterPicture,
+  PictureService,
+} from '../../services/PictureService'
+import {Filter as FilterVisit} from '../../services/VisitService'
 enum Tabs {
   HOME,
   PONTOS_TURISTICOS,
@@ -58,6 +67,20 @@ const Homepage: React.FC = () => {
   const confirmDialogue = useRef<ConfirmDialogueProps>(null)
   const visitModal = useRef<VisitProps>(null)
   const {showToast} = useContext(ToastContext)
+
+  const [pictureFilters, setPictureFilters] = useState<FilterPicture>({})
+  const [visitFilters, setVisitFilters] = useState<FilterVisit>({})
+
+  const handlePictureFilter = debounce(setPictureFilters, 1000)
+  const handleVisitFilter = debounce(setVisitFilters, 1000)
+
+  const {registerFilter: registerFilterPicture} = useFilter<FilterPicture>({
+    onChange: handlePictureFilter,
+  })
+  const {registerFilter: registerFilterVisit} = useFilter<FilterVisit>({
+    onChange: handleVisitFilter,
+  })
+
   const deletePictureLoading = useLoading(
     deletePicture,
     'Aguarde um momento. Deletando figura...',
@@ -73,22 +96,19 @@ const Homepage: React.FC = () => {
   }
 
   function handleDeletePicture(id: string) {
-    console.log(id)
-    confirmDialogue.current?.open(
-      console.log,
-      'Você deseja excluir esta figura?'
-    )
-    // confirmDialogue.current?.open((response) => {
-    //   if (response) {
-    //     deletePictureLoading(id)
-    //   }
-    // }, 'Você deseja excluir esta figura?')
+    confirmDialogue.current?.onConfirm((response) => {
+      if (response) {
+        deletePictureLoading(id)
+      }
+    })
+    confirmDialogue.current?.open('Você deseja excluir esta figura?')
   }
 
   async function deletePicture(id: string) {
     try {
       await pictureService.delete(id)
       showToast('Figura deletada com sucesso.', 'success')
+      window.location.reload()
     } catch {
       showToast('Erro ao deletar figura. Por favor, tente novamente.', 'error')
     }
@@ -178,7 +198,16 @@ const Homepage: React.FC = () => {
           </Box>
         </Drawer>
 
-        <Box p={4} mt={8} display="flex" flexDirection="column">
+        <Box
+          p={4}
+          mt={8}
+          sx={{
+            width: '100%',
+            flexWrap: 'wrap',
+          }}
+          display="flex"
+          flexDirection="column"
+        >
           {getCurrentTab() === Tabs.HOME && (
             <>
               <Typography variant="h4" component="div">
@@ -193,7 +222,26 @@ const Homepage: React.FC = () => {
                 Início
               </Typography>
 
+              <Typography variant="body1" component="label">
+                Visualize a listagem de todas as figuras cadastradas neste
+                momento na lista abaixo:
+              </Typography>
+
+              <FormControl
+                sx={{
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
+              >
+                <InputLabel htmlFor="title">Título</InputLabel>
+                <Input
+                  fullWidth
+                  {...(registerFilterPicture('title') as InputProps)}
+                />
+              </FormControl>
+
               <PicturesList
+                filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
               />
@@ -204,13 +252,29 @@ const Homepage: React.FC = () => {
               <Typography variant="h4" component="div">
                 Pontos Turísticos
               </Typography>
+              <Typography variant="body1" component="label">
+                Visualize a listagem de todas as figuras de Pontos Turísticos na
+                lista abaixo:
+              </Typography>
               <Divider
                 sx={{
                   margin: '8px 0px',
                 }}
               />
-
+              <FormControl
+                sx={{
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
+              >
+                <InputLabel htmlFor="title">Título</InputLabel>
+                <Input
+                  fullWidth
+                  {...(registerFilterPicture('title') as InputProps)}
+                />
+              </FormControl>
               <PicturesList
+                filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
                 filterBy="ATTRACTION"
@@ -222,12 +286,29 @@ const Homepage: React.FC = () => {
               <Typography variant="h4" component="div">
                 Cultura
               </Typography>
+              <Typography variant="body1" component="label">
+                Visualize a listagem de todas as figuras de Pontos Culturais na
+                lista abaixo:
+              </Typography>
               <Divider
                 sx={{
                   margin: '8px 0px',
                 }}
               />
+              <FormControl
+                sx={{
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
+              >
+                <InputLabel htmlFor="title">Título</InputLabel>
+                <Input
+                  fullWidth
+                  {...(registerFilterPicture('title') as InputProps)}
+                />
+              </FormControl>
               <PicturesList
+                filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
                 filterBy="CULTURE"
@@ -239,12 +320,29 @@ const Homepage: React.FC = () => {
               <Typography variant="h4" component="div">
                 Point da Cidade
               </Typography>
+              <Typography variant="body1" component="label">
+                Visualize a listagem de todas as figuras de Points da Cidade na
+                lista abaixo:
+              </Typography>
               <Divider
                 sx={{
                   margin: '8px 0px',
                 }}
               />
+              <FormControl
+                sx={{
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
+              >
+                <InputLabel htmlFor="title">Título</InputLabel>
+                <Input
+                  fullWidth
+                  {...(registerFilterPicture('title') as InputProps)}
+                />
+              </FormControl>
               <PicturesList
+                filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
                 filterBy="LANDMARK"
@@ -256,12 +354,29 @@ const Homepage: React.FC = () => {
               <Typography variant="h4" component="div">
                 Personalidades e Comunidades
               </Typography>
+              <Typography variant="body1" component="label">
+                Visualize a listagem de todas as figuras de Personalidades e
+                Comunidades na lista abaixo:
+              </Typography>
               <Divider
                 sx={{
                   margin: '8px 0px',
                 }}
               />
+              <FormControl
+                sx={{
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
+              >
+                <InputLabel htmlFor="title">Título</InputLabel>
+                <Input
+                  fullWidth
+                  {...(registerFilterPicture('title') as InputProps)}
+                />
+              </FormControl>
               <PicturesList
+                filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
                 filterBy="COMMUNITY"
@@ -278,7 +393,19 @@ const Homepage: React.FC = () => {
                   margin: '8px 0px',
                 }}
               />
-              <VisitList />
+              <FormControl
+                sx={{
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
+              >
+                <InputLabel htmlFor="pictureTitle">Título Da Figura</InputLabel>
+                <Input
+                  fullWidth
+                  {...(registerFilterVisit('pictureTitle') as InputProps)}
+                />
+              </FormControl>
+              <VisitList filter={visitFilters} />
             </>
           )}
           <Footer />

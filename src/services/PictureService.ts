@@ -5,6 +5,10 @@ import {PathBuilder} from '../utils/PathBuilder'
 export const PATH = '/picture'
 const MULTIPART_FORM_TYPE = 'multipart/form-data'
 
+export interface Filter {
+  title?: string
+}
+
 export class PictureService {
   toMultipartForm(picture: Picture): FormData {
     const {category, description, title, image} = picture
@@ -16,39 +20,17 @@ export class PictureService {
     return formData
   }
 
-  async fetch(): Promise<Picture[]> {
-    // const {data: pictures} = await api.get(new PathBuilder(PATH).build())
+  async fetch(filter?: Filter): Promise<Picture[]> {
+    // const {data: pictures} = await api.get(
+    //   new PathBuilder(PATH).addQuery('title', filter?.title).build()
+    // )
     // return pictures
     return [
       {
         id: '123',
         category: 'ATTRACTION',
-        description: 'Teste de descrição',
-        title: 'Ola mundo',
-      },
-      {
-        id: '123',
-        category: 'COMMUNITY',
-        description: 'Teste de descrição',
-        title: 'Ola mundo',
-      },
-      {
-        id: '123',
-        category: 'CULTURE',
-        description: 'Teste de descrição',
-        title: 'Ola mundo',
-      },
-      {
-        id: '123',
-        category: 'LANDMARK',
-        description: 'Teste de descrição',
-        title: 'Ola mundo',
-      },
-      {
-        id: '1234',
-        category: 'ATTRACTION',
-        description: 'Teste de descrição',
-        title: 'Ola mundo',
+        description: 'Ola teste',
+        title: 'Teste',
       },
     ]
   }

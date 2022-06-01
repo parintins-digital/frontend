@@ -7,7 +7,7 @@ interface AuthProps {
   login: (email: string, password: string) => Promise<User>
   loginAsAdmin: (email: string, password: string) => Promise<User>
   logout: () => void
-  isAuthenticated: () => boolean
+  isAuthenticated: () => Promise<boolean>
 }
 
 export const AuthContext = createContext<AuthProps>({} as AuthProps)
@@ -38,9 +38,10 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     userService.logout()
   }
 
-  function isAuthenticated() {
-    // return true
-    return userService.isAuthenticated()
+  async function isAuthenticated() {
+    return true
+    // const cookieExists = await userService.isAuthenticated()
+    // return cookieExists
   }
 
   return (

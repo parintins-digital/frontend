@@ -119,7 +119,15 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
             Faça o download do QRCode:
           </Typography>
           <div className={`${picture.title}-${picture.id}`}>
-            <QRCodeCanvas value={qrCodeURL} />
+            <QRCodeCanvas
+              style={{
+                width: '150px',
+                height: 'auto',
+              }}
+              level="L"
+              size={500}
+              value={qrCodeURL}
+            />
           </div>
           <CardActions disableSpacing>
             <IconButton onClick={downloadQRCode} aria-label="Download QRCode">

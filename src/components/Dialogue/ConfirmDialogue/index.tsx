@@ -14,13 +14,9 @@ import React, {
 } from 'react'
 
 export interface ConfirmDialogueProps {
-  open: (
-    onConfirm: (response: boolean) => void,
-    message?: string,
-    confirmLabel?: string,
-    denyLabel?: string
-  ) => void
+  open: (message?: string, confirmLabel?: string, denyLabel?: string) => void
   close: () => void
+  onConfirm: (fn: (response: boolean) => void) => void
 }
 
 interface Message {
@@ -29,12 +25,16 @@ interface Message {
   denyLabel: string
 }
 
+interface FunctionObject {
+  onConfirm: (response: boolean) => void
+}
+
 const ConfirmDialogue: React.ForwardRefRenderFunction<ConfirmDialogueProps> = (
   _,
   ref
 ) => {
   const [open, setOpen] = useState(false)
-  const [onConfirmFn, setOnConfirm] = useState<(response: boolean) => void>()
+  const [functionObject, setFunctionObject] = useState<FunctionObject>()
   const [message, setMessage] = useState<Message>({
     content: 'Deseja prosseguir com esta ação?',
     confirmLabel: 'CONFIRMAR',
@@ -42,13 +42,12 @@ const ConfirmDialogue: React.ForwardRefRenderFunction<ConfirmDialogueProps> = (
   })
 
   function handleConfirm(response: boolean) {
-    onConfirmFn?.(response)
+    functionObject?.onConfirm?.(response)
     handleClose()
   }
 
   const handleOpen = useCallback(
     (
-      onConfirm: (response: boolean) => void,
       message = 'Deseja prosseguir com esta ação?',
       confirmLabel = 'CONFIRMAR',
       denyLabel = 'CANCELAR'
@@ -58,11 +57,16 @@ const ConfirmDialogue: React.ForwardRefRenderFunction<ConfirmDialogueProps> = (
         confirmLabel,
         denyLabel,
       })
-      setOnConfirm(onConfirm)
       setOpen(true)
     },
     []
   )
+
+  function handleOnConfirm(fn: (response: boolean) => void) {
+    setFunctionObject({
+      onConfirm: fn,
+    })
+  }
 
   const handleClose = useCallback(() => {
     setOpen(false)
@@ -71,6 +75,7 @@ const ConfirmDialogue: React.ForwardRefRenderFunction<ConfirmDialogueProps> = (
   useImperativeHandle<Record<string, any>, ConfirmDialogueProps>(ref, () => ({
     open: handleOpen,
     close: handleClose,
+    onConfirm: handleOnConfirm,
   }))
 
   return (

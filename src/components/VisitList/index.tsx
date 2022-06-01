@@ -1,14 +1,22 @@
+import {Skeleton, Timeline, TimelineContent, TimelineSeparator} from '@mui/lab'
+import TimelineConnector from '@mui/lab/TimelineConnector'
+import TimelineDot from '@mui/lab/TimelineDot'
+import TimelineItem from '@mui/lab/TimelineItem'
 import {useEffect, useState} from 'react'
 import {Visit as VisitEntity} from '../../entities/Visit'
 import {useLoading} from '../../hooks/useLoading'
-import {VisitService} from '../../services/VisitService'
+import {Filter, VisitService} from '../../services/VisitService'
 import TabArea from '../TabArea'
 import Visit from '../Visit'
 
 const visitService = new VisitService()
 
-const VisitList: React.FC = () => {
-  const [visits, setVisits] = useState<Array<VisitEntity>>([])
+interface Props {
+  filter?: Filter
+}
+
+const VisitList: React.FC<Props> = ({filter = {}}: Props) => {
+  const [visits, setVisits] = useState<Array<VisitEntity>>()
   const handleFetch = useLoading(fetch, 'Carregando histórico de visitas...')
 
   useEffect(() => {
@@ -16,15 +24,69 @@ const VisitList: React.FC = () => {
   }, [])
 
   async function fetch() {
-    const newVisits = await visitService.fetch()
+    const newVisits = await visitService.fetch(filter)
     setVisits(newVisits)
   }
 
-  function renderVisit(visit: VisitEntity) {
-    return <Visit visit={visit} />
+  function renderVisit(visit: VisitEntity, index: number) {
+    return (
+      <TimelineItem>
+        <TimelineSeparator>
+          <TimelineDot
+            variant="outlined"
+            color={index % 2 === 0 ? 'primary' : 'secondary'}
+          />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <Visit visit={visit} />
+      </TimelineItem>
+    )
   }
 
-  return <TabArea>{visits.map(renderVisit)}</TabArea>
+  if (visits === undefined) {
+    return (
+      <TabArea>
+        <Timeline position="alternate">
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot variant="outlined" color={'primary'} />
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Skeleton variant="rectangular" height={100} />
+              <Skeleton variant="text" />
+            </TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot variant="outlined" color={'secondary'} />
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Skeleton variant="rectangular" height={100} />
+              <Skeleton variant="text" />
+            </TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot variant="outlined" color={'primary'} />
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Skeleton variant="rectangular" height={100} />
+              <Skeleton variant="text" />
+            </TimelineContent>
+          </TimelineItem>
+        </Timeline>
+      </TabArea>
+    )
+  }
+
+  return (
+    <TabArea>
+      <Timeline position="alternate">{visits.map(renderVisit)}</Timeline>
+    </TabArea>
+  )
 }
 
 export default VisitList

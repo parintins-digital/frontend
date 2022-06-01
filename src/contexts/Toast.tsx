@@ -1,4 +1,4 @@
-import {Alert, Snackbar} from '@mui/material'
+import {Alert, CircularProgress, Snackbar} from '@mui/material'
 import {createContext, useState} from 'react'
 
 type ToastType = 'error' | 'warning' | 'success' | 'info' | 'awaiting'
@@ -47,7 +47,7 @@ const ToastProvider: React.FC<Props> = ({children}: Props) => {
         ) : (
           <Alert
             onClose={closeToast}
-            icon={false}
+            icon={<CircularProgress size={24} />}
             severity="info"
             sx={{
               width: '100%',

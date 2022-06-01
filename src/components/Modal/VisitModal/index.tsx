@@ -60,7 +60,7 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
     `Buscando figura de ID: ${pictureId}`,
     false
   )
-  const handleSubmit = useLoading(onSubmit, 'Registrando visita...')
+  const handleSubmit = useLoading(onSubmit, 'Registrando visita...', false)
   const [picture, setPicture] = useState<Picture>()
 
   useEffect(() => {

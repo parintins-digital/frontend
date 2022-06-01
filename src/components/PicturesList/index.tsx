@@ -2,7 +2,7 @@ import {Badge} from '@mui/material'
 import {useEffect, useState} from 'react'
 import {CategoryType, Picture as PictureEntity} from '../../entities/Picture'
 import {useLoading} from '../../hooks/useLoading'
-import {PictureService} from '../../services/PictureService'
+import {Filter, PictureService} from '../../services/PictureService'
 import Picture from '../Picture'
 import TabArea from '../TabArea'
 
@@ -10,11 +10,17 @@ interface Props {
   onEdit: (id: string) => void
   onDelete: (id: string) => void
   filterBy?: CategoryType
+  filter?: Filter
 }
 
 const pictureService = new PictureService()
 
-const PicturesList: React.FC<Props> = ({filterBy, onDelete, onEdit}: Props) => {
+const PicturesList: React.FC<Props> = ({
+  filterBy,
+  filter = {},
+  onDelete,
+  onEdit,
+}: Props) => {
   const [pictures, setPictures] = useState<Array<PictureEntity>>([])
   const handleFetch = useLoading(fetch, 'Buscando figuras cadastradas...')
 
@@ -42,10 +48,10 @@ const PicturesList: React.FC<Props> = ({filterBy, onDelete, onEdit}: Props) => {
 
   useEffect(() => {
     handleFetch()
-  }, [])
+  }, [filter])
 
   async function fetch() {
-    const newPictures = await pictureService.fetch()
+    const newPictures = await pictureService.fetch(filter)
     if (filterBy) {
       const filteredPictures = newPictures.filter(
         (pic) => pic.category === filterBy

@@ -1,11 +1,13 @@
+import TimelineContent from '@mui/lab/TimelineContent'
+import {Skeleton} from '@mui/material'
 import Card from '@mui/material/Card'
-import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import {Visit as VisitEntity} from '../../entities/Visit'
-
 import {useEffect, useState} from 'react'
+import DefaultPicture from '../../assets/DefaultPicture.svg'
 import {Picture} from '../../entities/Picture'
+import {Visit as VisitEntity} from '../../entities/Visit'
 import {PictureService} from '../../services/PictureService'
 import {dateFrom} from '../../utils/FormatDateTime'
 
@@ -13,7 +15,6 @@ interface Props {
   visit: VisitEntity
 }
 
-import DefaultPicture from '../../assets/DefaultPicture.svg'
 const pictureService = new PictureService()
 
 const Visit: React.FC<Props> = ({visit}: Props) => {
@@ -28,13 +29,21 @@ const Visit: React.FC<Props> = ({visit}: Props) => {
     setPicture(newPicture)
   }
 
+  if (!picture)
+    return (
+      <TimelineContent>
+        <Skeleton variant="rectangular" height={100} />
+        <Skeleton variant="text" />
+      </TimelineContent>
+    )
+
   return (
-    <Card sx={{maxWidth: 345}}>
+    <TimelineContent>
       <Card sx={{maxWidth: 345}}>
         {picture && (
           <CardMedia
             component="img"
-            height="194"
+            height="100"
             image={
               picture.image
                 ? URL.createObjectURL(picture.image)
@@ -50,7 +59,7 @@ const Visit: React.FC<Props> = ({visit}: Props) => {
           </Typography>
         </CardContent>
       </Card>
-    </Card>
+    </TimelineContent>
   )
 }
 

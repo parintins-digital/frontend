@@ -6,7 +6,6 @@ import {
   clearSessionStorage,
   getSessionStorage,
   saveSessionStorage,
-  verifyIfCookieExists,
 } from './StorageService'
 
 const PATH = '/user'
@@ -23,8 +22,10 @@ export class UserService {
     return user
   }
 
-  isAuthenticated(): boolean {
-    return verifyIfCookieExists(AUTH_COOKIE)
+  async isAuthenticated(): Promise<boolean> {
+    const user = await this.findCurrentUser()
+    if (!user) return false
+    return true
   }
 
   logout(): void {

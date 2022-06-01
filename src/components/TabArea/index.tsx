@@ -16,10 +16,7 @@ const TabArea: React.FC<Props> = ({children}: Props) => {
       {children.length !== 0 ? (
         children
       ) : (
-        <Typography
-          variant="body2"
-          component="div"
-        >
+        <Typography variant="body2" component="div" color="lightgray">
           Não há itens a serem listados.
         </Typography>
       )}
