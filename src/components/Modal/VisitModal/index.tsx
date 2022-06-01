@@ -103,6 +103,7 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
       })
       .then(() => {
         showToast('Visita registrada com sucesso.', 'success')
+        handleClose()
       })
       .catch(() => {
         showToast(

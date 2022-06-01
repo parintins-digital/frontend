@@ -109,6 +109,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
       .update(picture.id, updatedPicture)
       .then(() => {
         showToast('Figura cadastrada com sucesso.', 'success')
+        handleClose()
       })
       .catch(() => {
         showToast('Erro ao cadastrar uma figura. Tente novamente.', 'error')

@@ -39,6 +39,7 @@ const ToastProvider: React.FC<Props> = ({children}: Props) => {
         open={visible}
         autoHideDuration={type !== 'awaiting' ? 6000 : undefined}
         onClose={closeToast}
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
       >
         {type !== 'awaiting' ? (
           <Alert onClose={closeToast} severity={type} sx={{width: '100%'}}>

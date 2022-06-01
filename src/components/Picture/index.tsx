@@ -64,7 +64,7 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
   }
 
   return (
-    <Card sx={{maxWidth: 345}}>
+    <Card sx={{maxWidth: 345}} draggable={false}>
       <CardMedia
         component="img"
         height="100"

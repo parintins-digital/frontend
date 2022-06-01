@@ -21,10 +21,23 @@ export class PictureService {
   }
 
   async fetch(filter?: Filter): Promise<Picture[]> {
-    const {data: pictures} = await api.get(
+    const {data: pictures} = await api.get<Array<Picture>>(
       new PathBuilder(PATH).addQuery('title', filter?.title).build()
     )
-    return pictures
+    const picturesWithImages: Array<Picture> = []
+    for (const picture of pictures) {
+      const {data: imageFile} = await api.get<File>(
+        new PathBuilder('images')
+          .addPath(picture.category)
+          .addPath(`${picture.id}`)
+          .build()
+      )
+      picturesWithImages.push({
+        ...picture,
+        image: imageFile,
+      })
+    }
+    return picturesWithImages
   }
 
   async create(picture: Picture): Promise<Picture> {
@@ -49,7 +62,17 @@ export class PictureService {
     const {data: picture} = await api.get<Picture | undefined>(
       new PathBuilder(PATH).addPath(id).build()
     )
-    return picture
+    let pictureWithImage: Picture | undefined
+    if (picture) {
+      const {data: imageFile} = await api.get<File>(
+        new PathBuilder('images')
+          .addPath(picture.category)
+          .addPath(`${picture.id}`)
+          .build()
+      )
+      pictureWithImage = {...picture, image: imageFile}
+    }
+    return pictureWithImage
   }
   async delete(id: string): Promise<boolean> {
     const {data: wasDeleted} = await api.delete<Picture>(

@@ -45,7 +45,9 @@ import {ToastContext} from '../../contexts/Toast'
 import {useAuth} from '../../hooks/useAuth'
 import {useFilter} from '../../hooks/useFilter'
 import {useLoading} from '../../hooks/useLoading'
+import {useCustomNavigate} from '../../hooks/useRedirect'
 import {useTab} from '../../hooks/useTab'
+import {PATHS} from '../../routes'
 import {
   Filter as FilterPicture,
   PictureService,
@@ -67,8 +69,8 @@ const pictureService = new PictureService()
 const Homepage: React.FC = () => {
   const {pictureId} = useParams()
   const {changeTab, getCurrentTab} = useTab(Tabs.HOME)
-
-  const {isAdmin} = useAuth()
+  const {navigateTo} = useCustomNavigate()
+  const {isAdmin, isAuthenticated} = useAuth()
 
   const pictureModal = useRef<PictureProps>(null)
   const readQRCodeModal = useRef<ReadQRCodeModalProps>(null)
@@ -127,6 +129,12 @@ const Homepage: React.FC = () => {
       showToast('Erro ao deletar figura. Por favor, tente novamente.', 'error')
     }
   }
+
+  isAuthenticated().then((cookies) => {
+    if (!cookies) {
+      navigateTo(PATHS.LOGIN)
+    }
+  })
 
   return (
     <Grid container height="100vh">

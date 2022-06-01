@@ -1,5 +1,4 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import RequireAuth from './components/RequireAuth'
 import AdminLogin from './pages/AdminLogin'
 import Homepage from './pages/Homepage'
 import Login from './pages/Login'
@@ -23,10 +22,8 @@ const Router: React.FC = () => {
         <Route path={PATHS.LOGIN} element={<Login />} />
         <Route path={PATHS.ADMIN_LOGIN} element={<AdminLogin />} />
         <Route path={PATHS.SIGNUP} element={<SignUp />} />
-        <Route element={<RequireAuth />}>
-          <Route path={PATHS.HOMEPAGE} element={<Homepage />} />
-          <Route path={PATHS.HOMEPAGE_REGISTRY_VISIT} element={<Homepage />} />
-        </Route>
+        <Route path={PATHS.HOMEPAGE} element={<Homepage />} />
+        <Route path={PATHS.HOMEPAGE_REGISTRY_VISIT} element={<Homepage />} />
       </Routes>
     </BrowserRouter>
   )

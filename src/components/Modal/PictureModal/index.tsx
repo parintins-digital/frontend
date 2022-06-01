@@ -95,6 +95,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
       .create(newPicture)
       .then(() => {
         showToast('Figura cadastrada com sucesso.', 'success')
+        handleClose()
       })
       .catch(() => {
         showToast('Erro ao cadastrar uma figura. Tente novamente.', 'error')
@@ -177,6 +178,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
                 style={{
                   margin: '0 auto',
                   maxWidth: '300px',
+                  maxHeight: '300px',
                 }}
               />
               <Button

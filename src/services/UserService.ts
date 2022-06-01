@@ -29,10 +29,17 @@ export class UserService {
   }
 
   async logout(): Promise<void> {
-    await api.get(new PathBuilder().addPath('logout').build()).then(() => {
+    await api.delete(new PathBuilder().addPath('logout').build()).then(() => {
       clearCookies()
       clearSessionStorage()
     })
+  }
+
+  async isAdmin(): Promise<boolean> {
+    const {data: response} = await api.get<boolean>(
+      new PathBuilder(PATH).addPath('admin').build()
+    )
+    return response
   }
 
   async create(user: User): Promise<User> {
