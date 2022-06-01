@@ -1,4 +1,4 @@
-import React, {createContext} from 'react'
+import React, {createContext, useState} from 'react'
 import {User} from '../entities/User'
 import {UserService} from '../services/UserService'
 
@@ -7,7 +7,8 @@ interface AuthProps {
   login: (email: string, password: string) => Promise<User>
   loginAsAdmin: (email: string, password: string) => Promise<User>
   logout: () => void
-  isAuthenticated: () => Promise<boolean>
+  isAuthenticated: (saveUser?: boolean) => Promise<boolean>
+  isAdmin: boolean
 }
 
 export const AuthContext = createContext<AuthProps>({} as AuthProps)
@@ -19,6 +20,8 @@ interface Props {
 const userService = new UserService()
 
 const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
+  const [isAdmin, setIsAdmin] = useState(true)
+
   function getAuthenticatedUser(): User | undefined {
     const user = userService.getAuthenticatedUser()
     return user
@@ -31,6 +34,9 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
 
   async function loginAsAdmin(email: string, password: string): Promise<User> {
     const user = await userService.loginAsAdmin(email, password)
+    if (user) {
+      setIsAdmin(true)
+    }
     return user
   }
 
@@ -38,8 +44,8 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     userService.logout()
   }
 
-  async function isAuthenticated() {
-    const cookieExists = await userService.isAuthenticated()
+  async function isAuthenticated(saveUser = false) {
+    const cookieExists = await userService.isAuthenticated(saveUser)
     return cookieExists
   }
 
@@ -51,6 +57,7 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
         logout,
         isAuthenticated,
         loginAsAdmin,
+        isAdmin,
       }}
     >
       {children}

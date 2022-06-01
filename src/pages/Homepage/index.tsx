@@ -42,6 +42,7 @@ import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
 import {ToastContext} from '../../contexts/Toast'
+import {useAuth} from '../../hooks/useAuth'
 import {useFilter} from '../../hooks/useFilter'
 import {useLoading} from '../../hooks/useLoading'
 import {useTab} from '../../hooks/useTab'
@@ -66,11 +67,15 @@ const pictureService = new PictureService()
 const Homepage: React.FC = () => {
   const {pictureId} = useParams()
   const {changeTab, getCurrentTab} = useTab(Tabs.HOME)
+
+  const {isAdmin} = useAuth()
+
   const pictureModal = useRef<PictureProps>(null)
   const readQRCodeModal = useRef<ReadQRCodeModalProps>(null)
   const editPictureModal = useRef<EditPictureProps>(null)
   const confirmDialogue = useRef<ConfirmDialogueProps>(null)
   const visitModal = useRef<VisitProps>(null)
+
   const {showToast} = useContext(ToastContext)
 
   const [pictureFilters, setPictureFilters] = useState<FilterPicture>({})

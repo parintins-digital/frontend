@@ -21,9 +21,10 @@ export class UserService {
     return user
   }
 
-  async isAuthenticated(): Promise<boolean> {
+  async isAuthenticated(saveUser = false): Promise<boolean> {
     const user = await this.findCurrentUser()
     if (!user) return false
+    if (saveUser) saveSessionStorage(LOCAL_USER_SYSTEM, user)
     return true
   }
 
