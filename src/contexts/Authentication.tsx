@@ -20,7 +20,7 @@ interface Props {
 const userService = new UserService()
 
 const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
-  const [isAdmin, setIsAdmin] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   function getAuthenticatedUser(): User | undefined {
     const user = userService.getAuthenticatedUser()
