@@ -16,6 +16,7 @@ import {useState} from 'react'
 import DefaultPicture from '../../assets/DefaultPicture.svg'
 import {DOMAIN} from '../../Constants'
 import {Picture as PictureEntity} from '../../entities/Picture'
+import {useAuth} from '../../hooks/useAuth'
 import {PathBuilder} from '../../utils/PathBuilder'
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
@@ -40,6 +41,7 @@ interface Props {
 
 const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
   const [expanded, setExpanded] = useState(false)
+  const {isAdmin} = useAuth()
 
   const qrCodeURL = new PathBuilder(DOMAIN)
     .addPath('homepage')
@@ -79,63 +81,70 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
           {picture.description}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <Button
-          onClick={() => {
-            if (picture.id) onEdit(picture.id)
-          }}
-          color="primary"
-          variant="text"
-        >
-          <EditIcon />
-        </Button>
-        <Button
-          onClick={() => {
-            if (picture.id) onDelete(picture.id)
-          }}
-          color="primary"
-          variant="text"
-        >
-          <DeleteIcon />
-        </Button>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography gutterBottom variant="body1" component="div">
-            Faça o download do QRCode:
-          </Typography>
-          <div className={`${picture.title}-${picture.id}`}>
-            <QRCodeCanvas
-              style={{
-                width: '150px',
-                height: 'auto',
-              }}
-              level="L"
-              size={500}
-              value={qrCodeURL}
-            />
-          </div>
+      {isAdmin && (
+        <>
           <CardActions disableSpacing>
-            <IconButton onClick={downloadQRCode} aria-label="Download QRCode">
-              <Download />
-            </IconButton>
+            <Button
+              onClick={() => {
+                if (picture.id) onEdit(picture.id)
+              }}
+              color="primary"
+              variant="text"
+            >
+              <EditIcon />
+            </Button>
+            <Button
+              onClick={() => {
+                if (picture.id) onDelete(picture.id)
+              }}
+              color="primary"
+              variant="text"
+            >
+              <DeleteIcon />
+            </Button>
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
           </CardActions>
-        </CardContent>
-      </Collapse>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Typography gutterBottom variant="body1" component="div">
+                Faça o download do QRCode:
+              </Typography>
+              <div className={`${picture.title}-${picture.id}`}>
+                <QRCodeCanvas
+                  style={{
+                    width: '150px',
+                    height: 'auto',
+                  }}
+                  level="L"
+                  size={500}
+                  value={qrCodeURL}
+                />
+              </div>
+              <CardActions disableSpacing>
+                <IconButton
+                  onClick={downloadQRCode}
+                  aria-label="Download QRCode"
+                >
+                  <Download />
+                </IconButton>
+              </CardActions>
+            </CardContent>
+          </Collapse>
+        </>
+      )}
     </Card>
   )
 }

@@ -14,8 +14,9 @@ const Header: React.FC = () => {
   const {navigateTo, createHandler} = useCustomNavigate()
 
   function handleLogout() {
-    userService.logout()
-    navigateTo(PATHS.MAIN)
+    userService.logout().then(() => {
+      navigateTo(PATHS.MAIN)
+    })
   }
 
   return (

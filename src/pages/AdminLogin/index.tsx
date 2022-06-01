@@ -10,10 +10,11 @@ import {
   InputAdornment,
   InputLabel,
 } from '@mui/material'
-import {useEffect, useState} from 'react'
+import {useContext, useState} from 'react'
 import {useForm} from 'react-hook-form'
 import LoginVideo from '../../assets/Video.mp4'
 import {colors} from '../../colors'
+import {ToastContext} from '../../contexts/Toast'
 import {useAuth} from '../../hooks/useAuth'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
@@ -25,24 +26,29 @@ interface FormData {
 
 const AdminLogin: React.FC = () => {
   const {navigateTo, createHandler} = useCustomNavigate()
-  const {loginAsAdmin, isAuthenticated} = useAuth()
+  const {loginAsAdmin} = useAuth()
+  const {showToast} = useContext(ToastContext)
   const [showPassword, setShowPassword] = useState(false)
   const {register, handleSubmit} = useForm<FormData>()
 
-  useEffect(() => {
-    isAuthenticated().then((cookieExists) => {
-      if (cookieExists) navigateTo(PATHS.HOMEPAGE)
-    })
-  }, [])
+  // useEffect(() => {
+  //   isAuthenticated().then((cookieExists) => {
+  //     if (cookieExists) navigateTo(PATHS.HOMEPAGE)
+  //   })
+  // }, [])
 
   function togglePasswordVisibility() {
     setShowPassword(!showPassword)
   }
 
   function onSubmit(data: FormData) {
-    loginAsAdmin(data.email, data.password).then(() => {
-      navigateTo(PATHS.HOMEPAGE)
-    })
+    loginAsAdmin(data.email, data.password)
+      .then(() => {
+        navigateTo(PATHS.HOMEPAGE)
+      })
+      .catch(() => {
+        showToast('Usuário e/ou senha incorretos. Tente novamente.', 'error')
+      })
   }
 
   return (

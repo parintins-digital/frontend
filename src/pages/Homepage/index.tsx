@@ -206,15 +206,19 @@ const Homepage: React.FC = () => {
                 <ListItemText primary="Registrar visita" />
               </ListItem>
             </List>
-            <Divider />
-            <List>
-              <ListItem button onClick={handleCreatePicture}>
-                <ListItemIcon>
-                  <AddIcon />
-                </ListItemIcon>
-                <ListItemText primary="Cadastrar uma figura" />
-              </ListItem>
-            </List>
+            {isAdmin && (
+              <>
+                <Divider />
+                <List>
+                  <ListItem button onClick={handleCreatePicture}>
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Cadastrar uma figura" />
+                  </ListItem>
+                </List>
+              </>
+            )}
           </Box>
         </Drawer>
 
@@ -231,7 +235,9 @@ const Homepage: React.FC = () => {
           {getCurrentTab() === Tabs.HOME && (
             <>
               <Typography variant="h4" component="div">
-                Seja bem-vindo ao seu Álbum Digital!
+                {isAdmin
+                  ? 'Seja bem-vindo ao Painel do Administrador!'
+                  : 'Seja bem-vindo ao seu Álbum Digital!'}
               </Typography>
               <Divider
                 sx={{
@@ -473,18 +479,20 @@ const Homepage: React.FC = () => {
             label="Registrar Visita"
             icon={<AddIcon />}
           />
-          <BottomNavigationAction
-            value={Tabs.CRIAR_FIGURA}
-            label="Criar Figura"
-            icon={<AddIcon />}
-          />
+          {isAdmin && (
+            <BottomNavigationAction
+              value={Tabs.CRIAR_FIGURA}
+              label="Criar Figura"
+              icon={<AddIcon />}
+            />
+          )}
         </BottomNavigation>
       </Box>
 
       <ReadQRCodeModal ref={readQRCodeModal} />
       <ConfirmDialogue ref={confirmDialogue} />
-      <PictureModal ref={pictureModal} />
-      <EditPictureModal ref={editPictureModal} />
+      {isAdmin && <PictureModal ref={pictureModal} />}
+      {isAdmin && <EditPictureModal ref={editPictureModal} />}
       {pictureId && <VisitModal ref={visitModal} pictureId={pictureId} />}
     </Grid>
   )

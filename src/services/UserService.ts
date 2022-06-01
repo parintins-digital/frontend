@@ -28,9 +28,11 @@ export class UserService {
     return true
   }
 
-  logout(): void {
-    clearCookies()
-    clearSessionStorage()
+  async logout(): Promise<void> {
+    await api.get(new PathBuilder().addPath('logout').build()).then(() => {
+      clearCookies()
+      clearSessionStorage()
+    })
   }
 
   async create(user: User): Promise<User> {
@@ -49,7 +51,7 @@ export class UserService {
   }
 
   async login(email: string, password: string): Promise<User> {
-    await api.post(new PathBuilder(PATH).addPath('login').build(), {
+    await api.post(new PathBuilder().addPath('login').build(), {
       email,
       password,
     })
@@ -60,7 +62,7 @@ export class UserService {
 
   async loginAsAdmin(email: string, password: string): Promise<User> {
     await api.post(
-      new PathBuilder(PATH).addPath('login').addPath('admin').build(),
+      new PathBuilder().addPath('login').addPath('admin').build(),
       {
         email,
         password,

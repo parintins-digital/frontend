@@ -12,12 +12,13 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material'
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {colors} from '../../colors'
 import {API_URL} from '../../Constants'
+import {ToastContext} from '../../contexts/Toast'
 import {useAuth} from '../../hooks/useAuth'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
@@ -32,6 +33,7 @@ const Login: React.FC = () => {
   const {navigateTo, createHandler, navigateToAnotherDomain} =
     useCustomNavigate()
   const {login, isAuthenticated} = useAuth()
+  const {showToast} = useContext(ToastContext)
   const [showPassword, setShowPassword] = useState(false)
   const {register, handleSubmit} = useForm<FormData>()
 
@@ -51,9 +53,13 @@ const Login: React.FC = () => {
   }
 
   function onSubmit(data: FormData) {
-    login(data.email, data.password).then(() => {
-      navigateTo(PATHS.HOMEPAGE)
-    })
+    login(data.email, data.password)
+      .then(() => {
+        navigateTo(PATHS.HOMEPAGE)
+      })
+      .catch(() => {
+        showToast('Usuário e/ou senha incorretos. Tente novamente.', 'error')
+      })
   }
 
   return (

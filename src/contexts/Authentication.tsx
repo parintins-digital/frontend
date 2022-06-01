@@ -6,7 +6,7 @@ interface AuthProps {
   getAuthenticatedUser: () => User | undefined
   login: (email: string, password: string) => Promise<User>
   loginAsAdmin: (email: string, password: string) => Promise<User>
-  logout: () => void
+  logout: () => Promise<void>
   isAuthenticated: (saveUser?: boolean) => Promise<boolean>
   isAdmin: boolean
 }
@@ -40,8 +40,8 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     return user
   }
 
-  function logout() {
-    userService.logout()
+  async function logout(): Promise<void> {
+    await userService.logout()
   }
 
   async function isAuthenticated(saveUser = false) {
