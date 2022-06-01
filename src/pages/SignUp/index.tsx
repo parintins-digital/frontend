@@ -12,13 +12,15 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material'
-import {useState} from 'react'
+import {useContext, useState} from 'react'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {colors} from '../../colors'
 import {API_URL} from '../../Constants'
+import {ToastContext} from '../../contexts/Toast'
 import {User} from '../../entities/User'
+import {useLoading} from '../../hooks/useLoading'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
 import {UserService} from '../../services/UserService'
@@ -36,14 +38,21 @@ const userService = new UserService()
 const SignUp: React.FC = () => {
   const {navigateTo, createHandler} = useCustomNavigate()
   const [showPassword, setShowPassword] = useState(false)
+  const {showToast} = useContext(ToastContext)
   const {register, handleSubmit} = useForm<FormData>()
+
+  const onSubmitLoading = useLoading(
+    onSubmit,
+    'Realizando o cadastro de usuário...',
+    false
+  )
 
   function handleGoogleAuth() {
     const loginURL = new PathBuilder(API_URL).addPath('login').build()
     window.open(loginURL, '_self')
   }
 
-  function onSubmit(data: FormData) {
+  async function onSubmit(data: FormData) {
     const {email, firstName, lastName, password} = data
 
     const newUser: User = {
@@ -54,9 +63,17 @@ const SignUp: React.FC = () => {
       createdAt: new Date(),
     }
 
-    userService.create(newUser).then(() => {
-      navigateTo(PATHS.LOGIN)
-    })
+    return userService
+      .create(newUser)
+      .then(() => {
+        navigateTo(PATHS.LOGIN)
+      })
+      .catch(() => {
+        showToast(
+          'Erro ao cadastrar usuário. Por favor, tente novamente.',
+          'error'
+        )
+      })
   }
 
   function togglePasswordVisibility() {
@@ -87,7 +104,7 @@ const SignUp: React.FC = () => {
             borderRadius={2}
             gap={2}
             component="form"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmitLoading)}
           >
             <ChevronLeftIcon
               onClick={createHandler(PATHS.MAIN)}
