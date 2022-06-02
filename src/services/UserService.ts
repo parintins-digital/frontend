@@ -24,7 +24,9 @@ export class UserService {
   async isAuthenticated(saveUser = false): Promise<boolean> {
     const user = await this.findCurrentUser()
     if (!user) return false
-    if (saveUser) saveSessionStorage(LOCAL_USER_SYSTEM, user)
+    if (!getSessionStorage<User>(LOCAL_USER_SYSTEM) && saveUser) {
+      saveSessionStorage(LOCAL_USER_SYSTEM, user)
+    }
     return true
   }
 
@@ -50,24 +52,31 @@ export class UserService {
     return createdUser
   }
 
-  async findCurrentUser(): Promise<User> {
-    const {data: authenticatedUser} = await api.get<User>(
+  async findCurrentUser(): Promise<User | undefined> {
+    const {data: authenticatedUser} = await api.get<User | undefined>(
       new PathBuilder(PATH).build()
     )
     return authenticatedUser
   }
 
-  async login(email: string, password: string): Promise<User> {
+  async login(email: string, password: string): Promise<User | undefined> {
     await api.post(new PathBuilder().addPath('login').build(), {
       email,
       password,
     })
     const authenticatedUser = await this.findCurrentUser()
+    if (!authenticatedUser) {
+      console.error('Não foi possível autenticar realizar a autenticação.')
+      return
+    }
     saveSessionStorage(LOCAL_USER_SYSTEM, authenticatedUser)
     return authenticatedUser
   }
 
-  async loginAsAdmin(email: string, password: string): Promise<User> {
+  async loginAsAdmin(
+    email: string,
+    password: string
+  ): Promise<User | undefined> {
     await api.post(
       new PathBuilder().addPath('login').addPath('admin').build(),
       {
@@ -76,6 +85,10 @@ export class UserService {
       }
     )
     const authenticatedUser = await this.findCurrentUser()
+    if (!authenticatedUser) {
+      console.error('Não foi possível autenticar realizar a autenticação.')
+      return
+    }
     return authenticatedUser
   }
 }

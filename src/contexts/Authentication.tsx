@@ -4,8 +4,8 @@ import {UserService} from '../services/UserService'
 
 interface AuthProps {
   getAuthenticatedUser: () => User | undefined
-  login: (email: string, password: string) => Promise<User>
-  loginAsAdmin: (email: string, password: string) => Promise<User>
+  login: (email: string, password: string) => Promise<User | undefined>
+  loginAsAdmin: (email: string, password: string) => Promise<User | undefined>
   logout: () => Promise<void>
   isAuthenticated: (saveUser?: boolean) => Promise<boolean>
   isAdmin: boolean
@@ -27,12 +27,18 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     return user
   }
 
-  async function login(email: string, password: string): Promise<User> {
+  async function login(
+    email: string,
+    password: string
+  ): Promise<User | undefined> {
     const user = await userService.login(email, password)
     return user
   }
 
-  async function loginAsAdmin(email: string, password: string): Promise<User> {
+  async function loginAsAdmin(
+    email: string,
+    password: string
+  ): Promise<User | undefined> {
     const user = await userService.loginAsAdmin(email, password)
     if (user) {
       setIsAdmin(true)

@@ -38,8 +38,8 @@ const Login: React.FC = () => {
   const {register, handleSubmit} = useForm<FormData>()
 
   useEffect(() => {
-    isAuthenticated(true).then((cookieExists) => {
-      if (cookieExists) navigateTo(PATHS.HOMEPAGE)
+    isAuthenticated(true).then((response) => {
+      if (response) navigateTo(PATHS.HOMEPAGE)
     })
   }, [])
 

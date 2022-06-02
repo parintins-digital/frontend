@@ -24,7 +24,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import {useContext, useRef, useState} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import ConfirmDialogue, {
   ConfirmDialogueProps,
@@ -99,6 +99,14 @@ const Homepage: React.FC = () => {
     false
   )
 
+  useEffect(() => {
+    isAuthenticated().then((response) => {
+      if (!response) {
+        navigateTo(PATHS.LOGIN)
+      }
+    })
+  }, [])
+
   function handleCreatePicture() {
     pictureModal.current?.open()
   }
@@ -129,12 +137,6 @@ const Homepage: React.FC = () => {
       showToast('Erro ao deletar figura. Por favor, tente novamente.', 'error')
     }
   }
-
-  isAuthenticated().then((cookies) => {
-    if (!cookies) {
-      navigateTo(PATHS.LOGIN)
-    }
-  })
 
   return (
     <Grid container height="100vh">

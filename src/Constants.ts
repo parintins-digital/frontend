@@ -8,4 +8,4 @@ export const IS_DEV = import.meta.env.DEV
 export const IS_PROD = import.meta.env.PROD
 export const DOMAIN = IS_DEV
   ? 'http://localhost:3000'
-  : 'http://parintinsdigital.com.br/'
+  : 'https://parintinsdigital.com.br/'
