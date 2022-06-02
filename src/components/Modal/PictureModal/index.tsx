@@ -27,7 +27,7 @@ import {PictureService} from '../../../services/PictureService'
 
 const style: SxProps<Theme> = {
   position: 'absolute',
-  top: '60%',
+  top: '50%',
   left: '50%',
   display: 'flex',
   flexDirection: 'column',
@@ -180,6 +180,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              flexWrap: 'wrap',
             }}
           >
             <Box
