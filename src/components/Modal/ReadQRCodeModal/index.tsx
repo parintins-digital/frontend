@@ -4,13 +4,9 @@ import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
 import {Html5Qrcode, Html5QrcodeSupportedFormats} from 'html5-qrcode'
+import {Html5QrcodeResult} from 'html5-qrcode/esm/core'
 import {Html5QrcodeCameraScanConfig} from 'html5-qrcode/esm/html5-qrcode'
-import React, {
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import React, {forwardRef, useCallback, useImperativeHandle} from 'react'
 import {useCustomNavigate} from '../../../hooks/useRedirect'
 
 const style: SxProps<Theme> = {
@@ -43,7 +39,7 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
   const [open, setOpen] = React.useState(false)
   const {navigateToAnotherDomain} = useCustomNavigate()
   const [scanRef] = useCustomRef<HTMLDivElement>(() => settingQRCodeScanner())
-  const [scanner, setScanner] = useState<Html5Qrcode>()
+  let scanner: Html5Qrcode
 
   function settingQRCodeScanner() {
     const html5Qrcode = new Html5Qrcode(SCAN_ELEMENT, {
@@ -54,12 +50,22 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
       fps: 10,
       qrbox: {width: 250, height: 250},
     }
-    html5Qrcode.start({facingMode: 'environment'}, config, onSucess, undefined)
-    setScanner(html5Qrcode)
+    html5Qrcode.start(
+      {facingMode: 'environment'},
+      config,
+      (url, result) => onSucess(url, result, html5Qrcode),
+      undefined
+    )
+    scanner = html5Qrcode
   }
 
-  function onSucess(url: string) {
+  function onSucess(
+    url: string,
+    result: Html5QrcodeResult,
+    scanner: Html5Qrcode
+  ) {
     navigateToAnotherDomain(url)
+    scanner.stop()
   }
 
   const handleOpen = useCallback(() => {
@@ -68,7 +74,7 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
 
   const handleClose = useCallback(() => {
     setOpen(false)
-    scanner?.stop()
+    scanner.stop()
   }, [])
 
   useImperativeHandle<Record<string, any>, ReadQRCodeModalProps>(ref, () => ({

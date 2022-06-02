@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography'
 import {QRCodeCanvas} from 'qrcode.react'
 import {useState} from 'react'
 import DefaultPicture from '../../assets/DefaultPicture.svg'
-import {DOMAIN} from '../../Constants'
+import {API_URL, DOMAIN} from '../../Constants'
 import {Picture as PictureEntity} from '../../entities/Picture'
 import {useAuth} from '../../hooks/useAuth'
 import {PathBuilder} from '../../utils/PathBuilder'
@@ -69,7 +69,12 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
         component="img"
         height="100"
         image={
-          picture.image ? URL.createObjectURL(picture.image) : DefaultPicture
+          picture.filename
+            ? new PathBuilder(API_URL)
+                .addPath('images')
+                .addPath(picture.filename)
+                .build()
+            : DefaultPicture
         }
         alt={picture.title}
       />

@@ -24,20 +24,7 @@ export class PictureService {
     const {data: pictures} = await api.get<Array<Picture>>(
       new PathBuilder(PATH).addQuery('title', filter?.title).build()
     )
-    const picturesWithImages: Array<Picture> = []
-    for (const picture of pictures) {
-      const {data: imageFile} = await api.get<File>(
-        new PathBuilder('images')
-          .addPath(picture.category)
-          .addPath(`${picture.id}`)
-          .build()
-      )
-      picturesWithImages.push({
-        ...picture,
-        image: imageFile,
-      })
-    }
-    return picturesWithImages
+    return pictures
   }
 
   async create(picture: Picture): Promise<Picture> {
@@ -64,12 +51,16 @@ export class PictureService {
     )
     let pictureWithImage: Picture | undefined
     if (picture) {
-      const {data: imageFile} = await api.get<File>(
-        new PathBuilder('images')
-          .addPath(picture.category)
-          .addPath(`${picture.id}`)
-          .build()
-      )
+      const {data: imageFile} = await api
+        .get<File | undefined>(
+          new PathBuilder('images')
+            .addPath(picture.category)
+            .addPath(`${picture.id}`)
+            .build()
+        )
+        .catch(() => {
+          return {data: undefined}
+        })
       pictureWithImage = {...picture, image: imageFile}
     }
     return pictureWithImage
