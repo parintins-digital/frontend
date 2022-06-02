@@ -10,15 +10,15 @@ import React, {forwardRef, useCallback, useImperativeHandle} from 'react'
 import {useCustomNavigate} from '../../../hooks/useRedirect'
 
 const style: SxProps<Theme> = {
-  position: 'absolute' as const,
-  top: '50%',
+  position: 'absolute',
+  top: '60%',
   left: '50%',
   display: 'flex',
   flexDirection: 'column',
   gap: 2,
   transform: 'translate(-50%, -50%)',
   width: {xs: '100vw', md: '50vw'},
-  height: {xs: '100vh', md: 'auto'},
+  height: 'auto',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,

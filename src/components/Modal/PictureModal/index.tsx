@@ -27,14 +27,14 @@ import {PictureService} from '../../../services/PictureService'
 
 const style: SxProps<Theme> = {
   position: 'absolute',
-  top: '50%',
+  top: '60%',
   left: '50%',
   display: 'flex',
   flexDirection: 'column',
-  gap: 4,
+  gap: 2,
   transform: 'translate(-50%, -50%)',
   width: {xs: '100vw', md: '50vw'},
-  height: {xs: '100vh', md: 'auto'},
+  height: 'auto',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -104,7 +104,10 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (!file) return
+    if (!file) {
+      event.target.value = ''
+      return
+    }
     const url = URL.createObjectURL(file)
     setImageURL(url)
   }
@@ -121,6 +124,9 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
   return (
     <Modal
       open={open}
+      sx={{
+        overflowY: 'auto',
+      }}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -169,27 +175,43 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
             Faça o upload de uma imagem:
           </Typography>
 
-          <input type="file" name="image" onChange={handleFileChange} />
-
-          {imageURL && (
-            <>
-              <img
-                src={imageURL}
-                style={{
-                  margin: '0 auto',
-                  maxWidth: '300px',
-                  maxHeight: '300px',
-                }}
-              />
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleClearImage}
-              >
-                REMOVER IMAGEM
-              </Button>
-            </>
-          )}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                alignItems: 'start',
+              }}
+            >
+              {imageURL && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleClearImage}
+                >
+                  REMOVER IMAGEM
+                </Button>
+              )}
+              <input type="file" name="image" onChange={handleFileChange} />
+            </Box>
+            {imageURL && (
+              <>
+                <img
+                  src={imageURL}
+                  style={{
+                    maxWidth: '200px',
+                  }}
+                />
+              </>
+            )}
+          </Box>
 
           <Button
             variant="contained"

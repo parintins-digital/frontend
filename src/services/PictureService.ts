@@ -67,7 +67,7 @@ export class PictureService {
   }
   async delete(id: string): Promise<boolean> {
     const {data: wasDeleted} = await api.delete<Picture>(
-      new PathBuilder().addPath(id).build()
+      new PathBuilder(PATH).addPath(id).build()
     )
     return !!wasDeleted.id
   }
