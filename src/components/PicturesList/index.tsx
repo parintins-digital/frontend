@@ -30,7 +30,7 @@ const PicturesList: React.FC<Props> = ({
 
   function renderPicture(picture: PictureEntity, index: number) {
     return (
-      <Fade in timeout={index * 1000}>
+      <Fade in timeout={index * 500}>
         <Badge
           color={categoryColorOf(picture.category)}
           badgeContent={`${index + 1}`}

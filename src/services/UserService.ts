@@ -53,9 +53,11 @@ export class UserService {
   }
 
   async findCurrentUser(): Promise<User | undefined> {
-    const {data: authenticatedUser} = await api.get<User | undefined>(
-      new PathBuilder(PATH).build()
-    )
+    const {data: authenticatedUser} = await api
+      .get<User | undefined>(new PathBuilder(PATH).build())
+      .catch(() => {
+        return {data: undefined}
+      })
     return authenticatedUser
   }
 

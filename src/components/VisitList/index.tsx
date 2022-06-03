@@ -31,7 +31,7 @@ const VisitList: React.FC<Props> = ({filter = {}}: Props) => {
 
   function renderVisit(visit: VisitEntity, index: number) {
     return (
-      <Fade in timeout={index * 1000}>
+      <Fade in timeout={index * 500}>
         <TimelineItem>
           <TimelineSeparator>
             <TimelineDot

@@ -21,10 +21,12 @@ import React, {
   useState,
 } from 'react'
 import {useForm} from 'react-hook-form'
+import {API_URL} from '../../../Constants'
 import {ToastContext} from '../../../contexts/Toast'
 import {CategoryType, Picture} from '../../../entities/Picture'
 import {useLoading} from '../../../hooks/useLoading'
 import {PictureService} from '../../../services/PictureService'
+import {PathBuilder} from '../../../utils/PathBuilder'
 
 const style: SxProps<Theme> = {
   display: 'flex',
@@ -79,8 +81,13 @@ const EditPictureModal: React.ForwardRefRenderFunction<
       return
     }
     setPicture(newPicture)
-    if (newPicture.image) {
-      setImageURL(URL.createObjectURL(newPicture.image))
+    if (newPicture.filename) {
+      setImageURL(
+        new PathBuilder(API_URL)
+          .addPath('images')
+          .addPath(newPicture.filename)
+          .build()
+      )
     }
   }
 

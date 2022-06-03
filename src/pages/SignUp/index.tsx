@@ -36,7 +36,8 @@ interface FormData {
 const userService = new UserService()
 
 const SignUp: React.FC = () => {
-  const {navigateTo, createHandler} = useCustomNavigate()
+  const {navigateTo, createHandler, navigateToAnotherDomain} =
+    useCustomNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const {showToast} = useContext(ToastContext)
   const {register, handleSubmit} = useForm<FormData>()
@@ -49,7 +50,7 @@ const SignUp: React.FC = () => {
 
   function handleGoogleAuth() {
     const loginURL = new PathBuilder(API_URL).addPath('login').build()
-    window.open(loginURL, '_self')
+    navigateToAnotherDomain(loginURL)
   }
 
   async function onSubmit(data: FormData) {
