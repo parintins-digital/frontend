@@ -55,10 +55,14 @@ interface FormData {
 
 const pictureService = new PictureService()
 
-const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
-  _,
-  ref
-) => {
+interface Props {
+  onClose: () => void
+}
+
+const EditPictureModal: React.ForwardRefRenderFunction<
+  EditPictureProps,
+  Props
+> = ({onClose}, ref) => {
   const [open, setOpen] = React.useState(false)
   const [imageURL, setImageURL] = useState<string>()
   const {showToast} = useContext(ToastContext)
@@ -94,6 +98,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
   const handleClose = useCallback(() => {
     handleReset()
     setOpen(false)
+    onClose()
   }, [])
 
   async function onSubmit(data: FormData) {

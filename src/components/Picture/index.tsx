@@ -95,6 +95,9 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
           label={categoryNameOf(picture.category)}
           color={categoryColorOf(picture.category)}
         />
+        <Typography variant="subtitle1" fontStyle="italic" color="GrayText">
+          {picture.author}
+        </Typography>
         <Typography variant="body2" color="text.secondary">
           {picture.description}
         </Typography>
