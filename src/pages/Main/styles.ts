@@ -51,7 +51,6 @@ export const Container = styled.div`
 
     .title {
       font-size: 40pt;
-      /* line-height: 16px; */
     }
 
     .subtitle {
@@ -126,7 +125,6 @@ export const Container = styled.div`
 `
 
 export const ContainerResponsive = styled.div`
-  width: 100vw;
   @media (max-width: 768px) {
     .main .introduction {
       border-radius: 0;

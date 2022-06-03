@@ -23,6 +23,7 @@ import React, {
 import {useForm} from 'react-hook-form'
 import {ToastContext} from '../../../contexts/Toast'
 import {CategoryType, Picture} from '../../../entities/Picture'
+import {useLoading} from '../../../hooks/useLoading'
 import {PictureService} from '../../../services/PictureService'
 
 const style: SxProps<Theme> = {
@@ -47,6 +48,7 @@ interface FormData {
   title: string
   description: string
   category: CategoryType
+  author: string
 }
 
 const pictureService = new PictureService()
@@ -56,6 +58,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
   const [imageURL, setImageURL] = useState<string>()
   const {showToast} = useContext(ToastContext)
   const {register, handleSubmit, reset} = useForm<FormData>()
+  const onSubmitLoading = useLoading(onSubmit, 'Registrando figura...')
 
   function handleReset() {
     reset()
@@ -73,7 +76,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
 
   async function onSubmit(data: FormData) {
     let fileImage: File | undefined
-    const {category, description, title} = data
+    const {category, description, title, author} = data
 
     if (imageURL) {
       const response = await fetch(imageURL)
@@ -86,6 +89,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
       description: description,
       title: title,
       category: category,
+      author: author,
     }
 
     await pictureService
@@ -140,7 +144,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
           Cadastrar uma nova figura
         </Typography>
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmitLoading)}
           style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}
         >
           <FormControl fullWidth>
@@ -150,6 +154,10 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
           <FormControl fullWidth>
             <InputLabel htmlFor="description">Descrição</InputLabel>
             <Input fullWidth {...register('description')} />
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel htmlFor="author">Autor</InputLabel>
+            <Input fullWidth {...register('author')} />
           </FormControl>
 
           <FormControl fullWidth>

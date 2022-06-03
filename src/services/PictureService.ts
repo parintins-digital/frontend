@@ -11,11 +11,12 @@ export interface Filter {
 
 export class PictureService {
   toMultipartForm(picture: Picture): FormData {
-    const {category, description, title, image} = picture
+    const {category, description, title, image, author} = picture
     const formData = new FormData()
     formData.append('title', title)
     formData.append('description', description)
     formData.append('category', category)
+    formData.append('author', author)
     if (image) formData.append('image', image)
     return formData
   }

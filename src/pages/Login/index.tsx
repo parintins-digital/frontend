@@ -17,6 +17,7 @@ import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {colors} from '../../colors'
+import FullLoading from '../../components/FullLoading'
 import {API_URL} from '../../Constants'
 import {ToastContext} from '../../contexts/Toast'
 import {useAuth} from '../../hooks/useAuth'
@@ -35,11 +36,16 @@ const Login: React.FC = () => {
   const {login, isAuthenticated} = useAuth()
   const {showToast} = useContext(ToastContext)
   const [showPassword, setShowPassword] = useState(false)
+  const [hasLogin, setHasLogin] = useState<boolean>()
   const {register, handleSubmit} = useForm<FormData>()
 
   useEffect(() => {
     isAuthenticated(true).then((response) => {
-      if (response) navigateTo(PATHS.HOMEPAGE)
+      if (response) {
+        navigateTo(PATHS.HOMEPAGE)
+      } else {
+        setHasLogin(false)
+      }
     })
   }, [])
 
@@ -60,6 +66,10 @@ const Login: React.FC = () => {
       .catch(() => {
         showToast('Usuário e/ou senha incorretos. Tente novamente.', 'error')
       })
+  }
+
+  if (hasLogin === undefined) {
+    return <FullLoading />
   }
 
   return (

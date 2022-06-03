@@ -31,12 +31,6 @@ const AdminLogin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const {register, handleSubmit} = useForm<FormData>()
 
-  // useEffect(() => {
-  //   isAuthenticated().then((cookieExists) => {
-  //     if (cookieExists) navigateTo(PATHS.HOMEPAGE)
-  //   })
-  // }, [])
-
   function togglePasswordVisibility() {
     setShowPassword(!showPassword)
   }

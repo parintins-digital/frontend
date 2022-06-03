@@ -30,6 +30,7 @@ import ConfirmDialogue, {
   ConfirmDialogueProps,
 } from '../../components/Dialogue/ConfirmDialogue'
 import Footer from '../../components/Footer'
+import FullLoading from '../../components/FullLoading'
 import Header from '../../components/Header'
 import EditPictureModal, {
   EditPictureProps,
@@ -72,6 +73,8 @@ const Homepage: React.FC = () => {
   const {navigateTo} = useCustomNavigate()
   const {isAdmin, isAuthenticated} = useAuth()
 
+  const [hasLogin, setHasLogin] = useState<boolean>()
+
   const pictureModal = useRef<PictureProps>(null)
   const readQRCodeModal = useRef<ReadQRCodeModalProps>(null)
   const editPictureModal = useRef<EditPictureProps>(null)
@@ -101,7 +104,9 @@ const Homepage: React.FC = () => {
 
   useEffect(() => {
     isAuthenticated().then((response) => {
-      if (!response) {
+      if (response) {
+        setHasLogin(true)
+      } else {
         navigateTo(PATHS.LOGIN)
       }
     })
@@ -136,6 +141,10 @@ const Homepage: React.FC = () => {
     } catch {
       showToast('Erro ao deletar figura. Por favor, tente novamente.', 'error')
     }
+  }
+
+  if (!hasLogin) {
+    return <FullLoading />
   }
 
   return (

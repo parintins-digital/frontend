@@ -24,6 +24,7 @@ import {useForm} from 'react-hook-form'
 import {API_URL} from '../../../Constants'
 import {ToastContext} from '../../../contexts/Toast'
 import {CategoryType, Picture} from '../../../entities/Picture'
+import {useLoading} from '../../../hooks/useLoading'
 import {PictureService} from '../../../services/PictureService'
 import {PathBuilder} from '../../../utils/PathBuilder'
 
@@ -49,6 +50,7 @@ interface FormData {
   title: string
   description: string
   category: CategoryType
+  author: string
 }
 
 const pictureService = new PictureService()
@@ -62,6 +64,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
   const {showToast} = useContext(ToastContext)
   const {register, handleSubmit, reset} = useForm<FormData>()
   const [picture, setPicture] = useState<Picture>()
+  const onSubmitLoading = useLoading(onSubmit, 'Atualizando figura...')
 
   async function fetchPicture(id: string) {
     const newPicture = await pictureService.findById(id)
@@ -96,7 +99,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
   async function onSubmit(data: FormData) {
     if (!picture || !picture.id) return
     let fileImage: File | undefined
-    const {category, description, title} = data
+    const {category, description, title, author} = data
 
     if (imageURL) {
       const response = await fetch(imageURL)
@@ -109,6 +112,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
       description: description,
       title: title,
       category: category,
+      author: author,
     }
 
     await pictureService
@@ -157,7 +161,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
           Cadastrar uma nova figura
         </Typography>
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmitLoading)}
           style={{display: 'flex', flexDirection: 'column', gap: '24px'}}
         >
           <FormControl fullWidth>
@@ -174,6 +178,14 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
               defaultValue={picture?.description || ''}
               fullWidth
               {...register('description')}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel htmlFor="author">Autor</InputLabel>
+            <Input
+              defaultValue={picture?.author || ''}
+              fullWidth
+              {...register('author')}
             />
           </FormControl>
 

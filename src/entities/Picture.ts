@@ -4,6 +4,7 @@ export interface Picture {
   id?: string
   title: string
   description: string
+  author: string
   image?: File
   filename?: string
   category: CategoryType
