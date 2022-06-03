@@ -21,12 +21,10 @@ import React, {
   useState,
 } from 'react'
 import {useForm} from 'react-hook-form'
-import {API_URL} from '../../../Constants'
 import {ToastContext} from '../../../contexts/Toast'
 import {CategoryType, Picture} from '../../../entities/Picture'
 import {useLoading} from '../../../hooks/useLoading'
 import {PictureService} from '../../../services/PictureService'
-import {PathBuilder} from '../../../utils/PathBuilder'
 
 const style: SxProps<Theme> = {
   display: 'flex',
@@ -72,15 +70,17 @@ const EditPictureModal: React.ForwardRefRenderFunction<
 
   async function fetchPicture(id: string) {
     const newPicture = await pictureService.findById(id)
-    if (!newPicture) throw new Error(`Picture with ${id} not exists.`)
-    setPicture(newPicture)
-    if (newPicture.filename) {
-      setImageURL(
-        new PathBuilder(API_URL)
-          .addPath('images')
-          .addPath(newPicture.filename)
-          .build()
+    if (!newPicture) {
+      showToast(
+        `Esta figura não existe. Verifique se ${id} é um ID válido.`,
+        'error'
       )
+      handleClose()
+      return
+    }
+    setPicture(newPicture)
+    if (newPicture.image) {
+      setImageURL(URL.createObjectURL(newPicture.image))
     }
   }
 
@@ -123,11 +123,11 @@ const EditPictureModal: React.ForwardRefRenderFunction<
     await pictureService
       .update(picture.id, updatedPicture)
       .then(() => {
-        showToast('Figura cadastrada com sucesso.', 'success')
+        showToast('Figura atualizada com sucesso.', 'success')
         handleClose()
       })
       .catch(() => {
-        showToast('Erro ao cadastrar uma figura. Tente novamente.', 'error')
+        showToast('Erro ao atualizar figura. Tente novamente.', 'error')
       })
   }
 
@@ -150,6 +150,9 @@ const EditPictureModal: React.ForwardRefRenderFunction<
   return (
     <Modal
       open={open}
+      sx={{
+        overflowY: 'auto',
+      }}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -163,7 +166,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<
           }}
         />
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Cadastrar uma nova figura
+          Editar figura
         </Typography>
         <form
           onSubmit={handleSubmit(onSubmitLoading)}

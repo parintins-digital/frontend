@@ -117,6 +117,9 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
 
   return (
     <Modal
+      sx={{
+        overflowY: 'auto',
+      }}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"

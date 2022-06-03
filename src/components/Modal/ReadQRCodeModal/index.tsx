@@ -96,6 +96,9 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
 
   return (
     <Modal
+      sx={{
+        overflowY: 'auto',
+      }}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"

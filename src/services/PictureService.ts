@@ -51,13 +51,10 @@ export class PictureService {
       new PathBuilder(PATH).addPath(id).build()
     )
     let pictureWithImage: Picture | undefined
-    if (picture) {
+    if (picture && picture.filename) {
       const {data: imageFile} = await api
         .get<File | undefined>(
-          new PathBuilder('images')
-            .addPath(picture.category)
-            .addPath(`${picture.id}`)
-            .build()
+          new PathBuilder('images').addPath(picture.filename).build()
         )
         .catch(() => {
           return {data: undefined}
