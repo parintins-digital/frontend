@@ -6,10 +6,12 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import {useEffect, useState} from 'react'
 import DefaultPicture from '../../assets/DefaultPicture.svg'
+import {API_URL} from '../../Constants'
 import {Picture} from '../../entities/Picture'
 import {Visit as VisitEntity} from '../../entities/Visit'
 import {PictureService} from '../../services/PictureService'
 import {dateFrom} from '../../utils/FormatDateTime'
+import {PathBuilder} from '../../utils/PathBuilder'
 
 interface Props {
   visit: VisitEntity
@@ -39,22 +41,25 @@ const Visit: React.FC<Props> = ({visit}: Props) => {
 
   return (
     <TimelineContent>
-      <Card sx={{maxWidth: 345}}>
+      <Card sx={{maxWidth: 300}}>
         {picture && (
           <CardMedia
             component="img"
-            height="100"
+            height="200"
             image={
-              picture.image
-                ? URL.createObjectURL(picture.image)
+              picture.filename
+                ? new PathBuilder(API_URL)
+                    .addPath('images')
+                    .addPath(picture.filename)
+                    .build()
                 : DefaultPicture
             }
             alt={picture.title}
           />
         )}
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Você visitou {picture?.title} no dia{' '}
+          <Typography gutterBottom variant="h6" component="label">
+            Você visitou {picture.title} no dia{' '}
             {dateFrom(new Date(visit.visitedOn))}
           </Typography>
         </CardContent>

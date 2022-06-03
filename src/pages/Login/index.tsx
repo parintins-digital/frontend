@@ -41,7 +41,6 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     isAuthenticated(true).then((response) => {
-      console.log(response)
       if (response) {
         navigateTo(PATHS.HOMEPAGE)
       } else {
