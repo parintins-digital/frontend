@@ -510,8 +510,18 @@ const Homepage: React.FC = () => {
 
       <ReadQRCodeModal ref={readQRCodeModal} />
       <ConfirmDialogue ref={confirmDialogue} />
-      {isAdmin && <PictureModal ref={pictureModal} />}
-      {isAdmin && <EditPictureModal ref={editPictureModal} />}
+      {isAdmin && (
+        <PictureModal
+          onClose={() => setPictureFilters({})}
+          ref={pictureModal}
+        />
+      )}
+      {isAdmin && (
+        <EditPictureModal
+          onClose={() => setPictureFilters({})}
+          ref={editPictureModal}
+        />
+      )}
       {pictureId && <VisitModal ref={visitModal} pictureId={pictureId} />}
     </Grid>
   )

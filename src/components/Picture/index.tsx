@@ -71,7 +71,7 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
     <Card sx={{maxWidth: 345}} draggable={false}>
       <CardMedia
         component="img"
-        height="200"
+        height="20vh"
         draggable={false}
         image={
           picture.filename
@@ -96,7 +96,7 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
           color={categoryColorOf(picture.category)}
         />
         <Typography variant="subtitle1" fontStyle="italic" color="GrayText">
-          {picture.author}
+          Criado por {picture.author}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {picture.description}

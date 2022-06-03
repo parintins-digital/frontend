@@ -2,6 +2,7 @@ import {Skeleton, Timeline, TimelineContent, TimelineSeparator} from '@mui/lab'
 import TimelineConnector from '@mui/lab/TimelineConnector'
 import TimelineDot from '@mui/lab/TimelineDot'
 import TimelineItem from '@mui/lab/TimelineItem'
+import {Fade} from '@mui/material'
 import {useEffect, useState} from 'react'
 import {Visit as VisitEntity} from '../../entities/Visit'
 import {useLoading} from '../../hooks/useLoading'
@@ -30,16 +31,18 @@ const VisitList: React.FC<Props> = ({filter = {}}: Props) => {
 
   function renderVisit(visit: VisitEntity, index: number) {
     return (
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineDot
-            variant="outlined"
-            color={index % 2 === 0 ? 'primary' : 'secondary'}
-          />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <Visit visit={visit} />
-      </TimelineItem>
+      <Fade in timeout={index * 1000}>
+        <TimelineItem>
+          <TimelineSeparator>
+            <TimelineDot
+              variant="outlined"
+              color={index % 2 === 0 ? 'primary' : 'secondary'}
+            />
+            <TimelineConnector />
+          </TimelineSeparator>
+          <Visit visit={visit} />
+        </TimelineItem>
+      </Fade>
     )
   }
 

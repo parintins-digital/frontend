@@ -1,4 +1,4 @@
-import {Badge} from '@mui/material'
+import {Badge, Fade} from '@mui/material'
 import {useEffect, useState} from 'react'
 import {
   categoryColorOf,
@@ -30,13 +30,15 @@ const PicturesList: React.FC<Props> = ({
 
   function renderPicture(picture: PictureEntity, index: number) {
     return (
-      <Badge
-        color={categoryColorOf(picture.category)}
-        badgeContent={`${index + 1}`}
-        key={picture.id || picture.title}
-      >
-        <Picture onDelete={onDelete} onEdit={onEdit} picture={picture} />
-      </Badge>
+      <Fade in timeout={index * 1000}>
+        <Badge
+          color={categoryColorOf(picture.category)}
+          badgeContent={`${index + 1}`}
+          key={picture.id || picture.title}
+        >
+          <Picture onDelete={onDelete} onEdit={onEdit} picture={picture} />
+        </Badge>
+      </Fade>
     )
   }
 
