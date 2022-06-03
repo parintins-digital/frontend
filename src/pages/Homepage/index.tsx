@@ -278,7 +278,7 @@ const Homepage: React.FC = () => {
                   marginBottom: 2,
                 }}
               >
-                <InputLabel htmlFor="title">Título</InputLabel>
+                <InputLabel htmlFor="title">Buscar por título...</InputLabel>
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
@@ -312,7 +312,7 @@ const Homepage: React.FC = () => {
                   marginBottom: 2,
                 }}
               >
-                <InputLabel htmlFor="title">Título</InputLabel>
+                <InputLabel htmlFor="title">Buscar por título...</InputLabel>
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
@@ -346,7 +346,7 @@ const Homepage: React.FC = () => {
                   marginBottom: 2,
                 }}
               >
-                <InputLabel htmlFor="title">Título</InputLabel>
+                <InputLabel htmlFor="title">Buscar por título...</InputLabel>
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
@@ -380,7 +380,7 @@ const Homepage: React.FC = () => {
                   marginBottom: 2,
                 }}
               >
-                <InputLabel htmlFor="title">Título</InputLabel>
+                <InputLabel htmlFor="title">Buscar por título...</InputLabel>
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
@@ -414,7 +414,7 @@ const Homepage: React.FC = () => {
                   marginBottom: 2,
                 }}
               >
-                <InputLabel htmlFor="title">Título</InputLabel>
+                <InputLabel htmlFor="title">Buscar por título...</InputLabel>
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
@@ -444,7 +444,9 @@ const Homepage: React.FC = () => {
                   marginBottom: 2,
                 }}
               >
-                <InputLabel htmlFor="pictureTitle">Título Da Figura</InputLabel>
+                <InputLabel htmlFor="pictureTitle">
+                  Buscar por título de figura...
+                </InputLabel>
                 <Input
                   fullWidth
                   {...(registerFilterVisit('pictureTitle') as InputProps)}

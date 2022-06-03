@@ -54,6 +54,7 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     const cookieExists = await userService.isAuthenticated(saveUser)
     const response = await userService.isAdmin()
     setIsAdmin(response)
+    console.log(cookieExists)
     return cookieExists
   }
 

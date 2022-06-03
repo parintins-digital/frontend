@@ -38,9 +38,11 @@ export class UserService {
   }
 
   async isAdmin(): Promise<boolean> {
-    const {data: response} = await api.get<boolean>(
-      new PathBuilder(PATH).addPath('admin').build()
-    )
+    const {data: response} = await api
+      .get<boolean>(new PathBuilder(PATH).addPath('admin').build())
+      .catch(() => {
+        return {data: false}
+      })
     return response
   }
 
