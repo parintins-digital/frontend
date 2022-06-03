@@ -21,9 +21,11 @@ import React, {
   useState,
 } from 'react'
 import {useForm} from 'react-hook-form'
+import {API_URL} from '../../../Constants'
 import {ToastContext} from '../../../contexts/Toast'
 import {CategoryType, Picture} from '../../../entities/Picture'
 import {PictureService} from '../../../services/PictureService'
+import {PathBuilder} from '../../../utils/PathBuilder'
 
 const style: SxProps<Theme> = {
   display: 'flex',
@@ -65,7 +67,14 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
     const newPicture = await pictureService.findById(id)
     if (!newPicture) throw new Error(`Picture with ${id} not exists.`)
     setPicture(newPicture)
-    if (newPicture.image) setImageURL(URL.createObjectURL(newPicture.image))
+    if (newPicture.filename) {
+      setImageURL(
+        new PathBuilder(API_URL)
+          .addPath('images')
+          .addPath(newPicture.filename)
+          .build()
+      )
+    }
   }
 
   function handleReset() {
@@ -188,7 +197,12 @@ const EditPictureModal: React.ForwardRefRenderFunction<EditPictureProps> = (
             Faça o upload de uma imagem:
           </Typography>
 
-          <input type="file" name="image" onChange={handleFileChange} />
+          <input
+            type="file"
+            accept=".png,.jpeg"
+            name="image"
+            onChange={handleFileChange}
+          />
 
           {imageURL && (
             <>

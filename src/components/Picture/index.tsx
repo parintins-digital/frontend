@@ -88,6 +88,10 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
           {picture.title}
         </Typography>
         <Chip
+          sx={{
+            marginTop: '2px',
+            marginBottom: '2px',
+          }}
           label={categoryNameOf(picture.category)}
           color={categoryColorOf(picture.category)}
         />
