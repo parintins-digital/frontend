@@ -26,17 +26,14 @@ import {CategoryType, Picture} from '../../../entities/Picture'
 import {PictureService} from '../../../services/PictureService'
 
 const style: SxProps<Theme> = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
   display: 'flex',
   flexDirection: 'column',
   gap: 2,
-  transform: 'translate(-50%, -50%)',
   width: {xs: '100vw', md: '50vw'},
   height: 'auto',
   bgcolor: 'background.paper',
   boxShadow: 24,
+  margin: '16px auto',
   p: 4,
   borderRadius: 1,
 }
@@ -144,7 +141,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
         </Typography>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          style={{display: 'flex', flexDirection: 'column', gap: '24px'}}
+          style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}
         >
           <FormControl fullWidth>
             <InputLabel htmlFor="title">Título</InputLabel>
@@ -181,6 +178,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps> = (_, ref) => {
               alignItems: 'center',
               justifyContent: 'center',
               flexWrap: 'wrap',
+              gap: '8px',
             }}
           >
             <Box

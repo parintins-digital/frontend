@@ -6,21 +6,25 @@ import Typography from '@mui/material/Typography'
 import {Html5Qrcode, Html5QrcodeSupportedFormats} from 'html5-qrcode'
 import {Html5QrcodeResult} from 'html5-qrcode/esm/core'
 import {Html5QrcodeCameraScanConfig} from 'html5-qrcode/esm/html5-qrcode'
-import React, {forwardRef, useCallback, useImperativeHandle} from 'react'
+import React, {
+  forwardRef,
+  useCallback,
+  useContext,
+  useImperativeHandle,
+} from 'react'
+import {DOMAIN} from '../../../Constants'
+import {ToastContext} from '../../../contexts/Toast'
 import {useCustomNavigate} from '../../../hooks/useRedirect'
 
 const style: SxProps<Theme> = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
   display: 'flex',
   flexDirection: 'column',
   gap: 2,
-  transform: 'translate(-50%, -50%)',
   width: {xs: '100vw', md: '50vw'},
   height: 'auto',
   bgcolor: 'background.paper',
   boxShadow: 24,
+  margin: '16px auto',
   p: 4,
   borderRadius: 1,
 }
@@ -37,6 +41,7 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
   ref
 ) => {
   const [open, setOpen] = React.useState(false)
+  const {showToast} = useContext(ToastContext)
   const {navigateToAnotherDomain} = useCustomNavigate()
   const [scanRef] = useCustomRef<HTMLDivElement>(() => settingQRCodeScanner())
   let scanner: Html5Qrcode
@@ -64,8 +69,15 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
     result: Html5QrcodeResult,
     scanner: Html5Qrcode
   ) {
-    navigateToAnotherDomain(url)
-    scanner.stop()
+    if (url.includes(DOMAIN)) {
+      navigateToAnotherDomain(url)
+      scanner.stop()
+    } else {
+      showToast(
+        'QRCode inválido para registro de visita. Por favor, leia um QR Code válido.',
+        'error'
+      )
+    }
   }
 
   const handleOpen = useCallback(() => {
@@ -108,7 +120,7 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
           id={SCAN_ELEMENT}
           ref={scanRef}
           style={{
-            width: '90%',
+            width: '100%',
           }}
         ></div>
       </Box>

@@ -1,6 +1,10 @@
 import {Badge} from '@mui/material'
 import {useEffect, useState} from 'react'
-import {CategoryType, Picture as PictureEntity} from '../../entities/Picture'
+import {
+  categoryColorOf,
+  CategoryType,
+  Picture as PictureEntity,
+} from '../../entities/Picture'
 import {useLoading} from '../../hooks/useLoading'
 import {Filter, PictureService} from '../../services/PictureService'
 import Picture from '../Picture'
@@ -27,23 +31,13 @@ const PicturesList: React.FC<Props> = ({
   function renderPicture(picture: PictureEntity, index: number) {
     return (
       <Badge
-        color={badgeColorOf(picture.category)}
+        color={categoryColorOf(picture.category)}
         badgeContent={`${index + 1}`}
         key={picture.id || picture.title}
       >
         <Picture onDelete={onDelete} onEdit={onEdit} picture={picture} />
       </Badge>
     )
-  }
-
-  function badgeColorOf(
-    category: CategoryType
-  ): 'warning' | 'primary' | 'secondary' | 'success' | 'error' | 'info' {
-    if (category === 'ATTRACTION') return 'warning'
-    else if (category === 'COMMUNITY') return 'info'
-    else if (category === 'CULTURE') return 'secondary'
-    else if (category === 'LANDMARK') return 'success'
-    else return 'primary'
   }
 
   useEffect(() => {

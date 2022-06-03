@@ -2,7 +2,7 @@ import {Download} from '@mui/icons-material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import {Button} from '@mui/material'
+import {Button, Chip} from '@mui/material'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -15,7 +15,11 @@ import {QRCodeCanvas} from 'qrcode.react'
 import {useState} from 'react'
 import DefaultPicture from '../../assets/DefaultPicture.svg'
 import {API_URL, DOMAIN} from '../../Constants'
-import {Picture as PictureEntity} from '../../entities/Picture'
+import {
+  categoryColorOf,
+  categoryNameOf,
+  Picture as PictureEntity,
+} from '../../entities/Picture'
 import {useAuth} from '../../hooks/useAuth'
 import {PathBuilder} from '../../utils/PathBuilder'
 interface ExpandMoreProps extends IconButtonProps {
@@ -67,7 +71,8 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
     <Card sx={{maxWidth: 345}} draggable={false}>
       <CardMedia
         component="img"
-        height="100"
+        height="200"
+        draggable={false}
         image={
           picture.filename
             ? new PathBuilder(API_URL)
@@ -78,10 +83,14 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
         }
         alt={picture.title}
       />
-      <CardContent>
+      <CardContent draggable={false}>
         <Typography gutterBottom variant="h5" component="div">
           {picture.title}
         </Typography>
+        <Chip
+          label={categoryNameOf(picture.category)}
+          color={categoryColorOf(picture.category)}
+        />
         <Typography variant="body2" color="text.secondary">
           {picture.description}
         </Typography>

@@ -9,3 +9,31 @@ export interface Picture {
   category: CategoryType
   createdAt?: Date
 }
+
+export function categoryNameOf(category: CategoryType): string {
+  const dictionary = {
+    ATTRACTION: 'Pontos Turísticos',
+    CULTURE: 'Cultura',
+    LANDMARK: 'Point da Cidade',
+    COMMUNITY: 'Personalidades e Comunidades',
+  }
+  return dictionary[category]
+}
+
+export function categoryColorOf(
+  category: CategoryType
+): 'warning' | 'primary' | 'secondary' | 'success' | 'error' | 'info' {
+  const dictionary = {
+    ATTRACTION: 'warning',
+    CULTURE: 'secondary',
+    LANDMARK: 'success',
+    COMMUNITY: 'info',
+  }
+  return dictionary[category] as
+    | 'warning'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'error'
+    | 'info'
+}

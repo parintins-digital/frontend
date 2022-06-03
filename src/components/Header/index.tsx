@@ -3,6 +3,7 @@ import {AppBar, Button, Toolbar} from '@mui/material'
 import React from 'react'
 import LogoImage from '../../assets/Logo-v2.png'
 import {useAuth} from '../../hooks/useAuth'
+import {useLoading} from '../../hooks/useLoading'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
 import {UserService} from '../../services/UserService'
@@ -12,9 +13,10 @@ const userService = new UserService()
 const Header: React.FC = () => {
   const {isAdmin} = useAuth()
   const {navigateTo, createHandler} = useCustomNavigate()
+  const handleLogoutLoading = useLoading(handleLogout, 'Finalizando sessão...')
 
-  function handleLogout() {
-    userService.logout().then(() => {
+  async function handleLogout() {
+    return userService.logout().then(() => {
       navigateTo(PATHS.MAIN)
     })
   }
@@ -41,7 +43,7 @@ const Header: React.FC = () => {
         <Button
           variant="contained"
           color={isAdmin ? 'secondary' : 'primary'}
-          onClick={handleLogout}
+          onClick={handleLogoutLoading}
           startIcon={<LogoutIcon />}
           sx={{
             marginLeft: 'auto',

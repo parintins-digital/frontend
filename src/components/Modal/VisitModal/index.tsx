@@ -21,17 +21,14 @@ import {VisitService} from '../../../services/VisitService'
 import {dateFrom, dateTimeFrom} from '../../../utils/FormatDateTime'
 
 const style: SxProps<Theme> = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
   display: 'flex',
   flexDirection: 'column',
   gap: 2,
-  transform: 'translate(-50%, -50%)',
   width: {xs: '100vw', md: '50vw'},
   height: 'auto',
   bgcolor: 'background.paper',
   boxShadow: 24,
+  margin: '16px auto',
   p: 4,
   borderRadius: 1,
 }

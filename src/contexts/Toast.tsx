@@ -42,12 +42,12 @@ const ToastProvider: React.FC<Props> = ({children}: Props) => {
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
       >
         {type !== 'awaiting' ? (
-          <Alert severity={type} sx={{width: '100%'}}>
+          <Alert onClose={closeToast} severity={type} sx={{width: '100%'}}>
             {message}
           </Alert>
         ) : (
           <Alert
-            onClose={closeToast}
+            action={false}
             icon={<CircularProgress size={24} />}
             severity="info"
             sx={{
