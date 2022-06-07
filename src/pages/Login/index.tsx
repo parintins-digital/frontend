@@ -15,7 +15,7 @@ import {
 import {useContext, useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
 import {Link} from 'react-router-dom'
-import LoginVideo from '../../assets/Video.mp4'
+import LoginVideo from '../../assets/LoginVideo.mp4'
 import {colors} from '../../colors'
 import FullLoading from '../../components/FullLoading'
 import {API_URL} from '../../Constants'
@@ -78,8 +78,8 @@ const Login: React.FC = () => {
         container
         justifyContent="center"
         alignItems="center"
-        height="100vh"
         width="100vw"
+        height="100vh"
       >
         <Grid
           container
@@ -87,7 +87,7 @@ const Login: React.FC = () => {
           bgcolor={colors.backgroundElement}
           sx={{
             width: {xs: '100vw', md: '50vw'},
-            height: {xs: '100vh', md: 'auto'},
+            minHeight: {xs: '100vh', md: 'auto'},
           }}
         >
           <Grid

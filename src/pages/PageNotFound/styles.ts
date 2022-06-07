@@ -8,6 +8,7 @@ export const Container = styled.div`
   gap: 80px;
   width: 100vw;
   height: 100vh;
+  padding-bottom: 16px;
 
   img {
     cursor: pointer;

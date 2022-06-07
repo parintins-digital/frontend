@@ -5,7 +5,7 @@ import {
   clearCookies,
   clearSessionStorage,
   getSessionStorage,
-  saveSessionStorage,
+  setSessionStorage,
 } from './StorageService'
 
 const PATH = '/user'
@@ -25,7 +25,7 @@ export class UserService {
     const user = await this.findCurrentUser()
     if (!user) return false
     if (!getSessionStorage<User>(LOCAL_USER_SYSTEM) && saveUser) {
-      saveSessionStorage(LOCAL_USER_SYSTEM, user)
+      setSessionStorage(LOCAL_USER_SYSTEM, user)
     }
     return true
   }
@@ -73,7 +73,7 @@ export class UserService {
       console.error('Não foi possível autenticar realizar a autenticação.')
       return
     }
-    saveSessionStorage(LOCAL_USER_SYSTEM, authenticatedUser)
+    setSessionStorage(LOCAL_USER_SYSTEM, authenticatedUser)
     return authenticatedUser
   }
 

@@ -1,5 +1,6 @@
 import {createTheme, CssBaseline} from '@mui/material'
 import {ThemeProvider} from '@mui/system'
+import {useEffect} from 'react'
 import {colors} from './colors'
 import {DOMAIN} from './Constants'
 import AuthenticationProvider from './contexts/Authentication'
@@ -21,7 +22,9 @@ const theme = createTheme({
 })
 
 function App() {
-  console.info('Bem-vindo a Parintins Digital em:', DOMAIN)
+  useEffect(() => {
+    console.info('Bem-vindo a Parintins Digital em:', DOMAIN)
+  }, [])
   return (
     <AuthenticationProvider>
       <ToastProvider>

@@ -21,12 +21,22 @@ export function verifyIfCookieExists(cookieName: string): boolean {
   return cookieExists
 }
 
-export function saveSessionStorage(key: string, value: any) {
+export function setSessionStorage(key: string, value: any) {
   sessionStorage.setItem(key, JSON.stringify(value))
 }
 
 export function getSessionStorage<T>(key: string): T | undefined {
   const data = sessionStorage.getItem(key)
+  if (!data) return
+  return JSON.parse(data) as unknown as T
+}
+
+export function setLocalStorage(key: string, value: any) {
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
+export function getLocalStorage<T>(key: string): T | undefined {
+  const data = localStorage.getItem(key)
   if (!data) return
   return JSON.parse(data) as unknown as T
 }

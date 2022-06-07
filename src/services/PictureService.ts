@@ -1,9 +1,11 @@
 import api from '../api'
 import {Picture} from '../entities/Picture'
 import {PathBuilder} from '../utils/PathBuilder'
+import {getLocalStorage, setLocalStorage} from './StorageService'
 
 export const PATH = '/picture'
 const MULTIPART_FORM_TYPE = 'multipart/form-data'
+const FLIPPED_PICTURES_LOCAL_NAME = 'flippedCards'
 
 export interface Filter {
   title?: string
@@ -63,10 +65,30 @@ export class PictureService {
     }
     return pictureWithImage
   }
+
   async delete(id: string): Promise<boolean> {
     const {data: wasDeleted} = await api.delete<Picture>(
       new PathBuilder(PATH).addPath(id).build()
     )
     return !!wasDeleted.id
+  }
+
+  flipPicture(id: string): string {
+    const flippedPictures = this.getFlippedPictures()
+    if (!flippedPictures.includes(id)) {
+      setLocalStorage(FLIPPED_PICTURES_LOCAL_NAME, [...flippedPictures, id])
+    }
+    return id
+  }
+
+  getFlippedPictures(): Array<string> {
+    const flippedPictures = getLocalStorage<Array<string>>(
+      FLIPPED_PICTURES_LOCAL_NAME
+    )
+    if (flippedPictures === undefined) {
+      setLocalStorage(FLIPPED_PICTURES_LOCAL_NAME, [])
+      return []
+    }
+    return flippedPictures
   }
 }

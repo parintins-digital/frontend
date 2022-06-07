@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import {useContext, useState} from 'react'
 import {useForm} from 'react-hook-form'
-import LoginVideo from '../../assets/Video.mp4'
+import LoginVideo from '../../assets/LoginVideo.mp4'
 import {colors} from '../../colors'
 import {ToastContext} from '../../contexts/Toast'
 import {useAuth} from '../../hooks/useAuth'
@@ -60,7 +60,7 @@ const AdminLogin: React.FC = () => {
           bgcolor={colors.backgroundElement}
           sx={{
             width: {xs: '100vw', md: '50vw'},
-            height: {xs: '100vh', md: 'auto'},
+            minHeight: {xs: '100vh', md: 'auto'},
           }}
         >
           <Grid
