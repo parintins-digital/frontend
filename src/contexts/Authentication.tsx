@@ -50,7 +50,7 @@ const AuthenticationProvider: React.FC<Props> = ({children}: Props) => {
     await userService.logout()
   }
 
-  async function isAuthenticated(saveUser = false) {
+  async function isAuthenticated(saveUser = false): Promise<boolean> {
     const cookieExists = await userService.isAuthenticated(saveUser)
     const response = await userService.isAdmin()
     setIsAdmin(response)

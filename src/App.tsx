@@ -21,7 +21,7 @@ const theme = createTheme({
 })
 
 function App() {
-  console.info('Bem-vindo a Parintins Digital, no domínio:', DOMAIN)
+  console.info('Bem-vindo a Parintins Digital em:', DOMAIN)
   return (
     <AuthenticationProvider>
       <ToastProvider>

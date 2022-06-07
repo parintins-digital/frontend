@@ -37,7 +37,6 @@ const ToastProvider: React.FC<Props> = ({children}: Props) => {
       {children}
       <Snackbar
         open={visible}
-        autoHideDuration={type !== 'awaiting' ? 6000 : undefined}
         onClose={closeToast}
         anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
       >

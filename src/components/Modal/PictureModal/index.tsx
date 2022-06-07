@@ -65,7 +65,7 @@ const PictureModal: React.ForwardRefRenderFunction<PictureProps, Props> = (
   const [imageURL, setImageURL] = useState<string>()
   const {showToast} = useContext(ToastContext)
   const {register, handleSubmit, reset} = useForm<FormData>()
-  const onSubmitLoading = useLoading(onSubmit, 'Registrando figura...')
+  const onSubmitLoading = useLoading(onSubmit, 'Registrando figura...', false)
 
   function handleReset() {
     reset()

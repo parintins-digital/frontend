@@ -95,4 +95,33 @@ export class UserService {
     }
     return authenticatedUser
   }
+
+  async resetPassword(email: string): Promise<void> {
+    return api.put(new PathBuilder().addPath('forgot-password').build(), {
+      email,
+    })
+  }
+
+  async updatePassword(token: string, newPassword: string): Promise<void> {
+    return api.put(
+      new PathBuilder().addPath('reset-password').addPath(token).build(),
+      {
+        password: newPassword,
+      }
+    )
+  }
+
+  async validateResetToken(token: string): Promise<boolean> {
+    const {data: isValid} = await api
+      .get<boolean>(
+        new PathBuilder().addPath('reset-password').addPath(token).build()
+      )
+      .then(({status}) => {
+        return {data: status === 200}
+      })
+      .catch(() => {
+        return {data: false}
+      })
+    return isValid
+  }
 }

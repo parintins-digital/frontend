@@ -68,7 +68,7 @@ const EditPictureModal: React.ForwardRefRenderFunction<
   const {showToast} = useContext(ToastContext)
   const {register, handleSubmit, reset} = useForm<FormData>()
   const [picture, setPicture] = useState<Picture>()
-  const onSubmitLoading = useLoading(onSubmit, 'Atualizando figura...')
+  const onSubmitLoading = useLoading(onSubmit, 'Atualizando figura...', false)
 
   async function fetchPicture(id: string) {
     const newPicture = await pictureService.findById(id)

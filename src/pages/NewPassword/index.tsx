@@ -1,74 +1,97 @@
 import {Visibility, VisibilityOff} from '@mui/icons-material'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import GoogleIcon from '@mui/icons-material/Google'
 import {
   Button,
   FormControl,
-  FormHelperText,
   FormLabel,
   Grid,
   Input,
   InputAdornment,
   InputLabel,
-  Typography,
 } from '@mui/material'
 import {useContext, useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
-import {Link} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 import LoginVideo from '../../assets/Video.mp4'
 import {colors} from '../../colors'
 import FullLoading from '../../components/FullLoading'
-import {API_URL} from '../../Constants'
 import {ToastContext} from '../../contexts/Toast'
-import {useAuth} from '../../hooks/useAuth'
+import {useLoading} from '../../hooks/useLoading'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
-import {PathBuilder} from '../../utils/PathBuilder'
+import {UserService} from '../../services/UserService'
 
 interface FormData {
-  email: string
   password: string
+  confirmPassword: string
 }
 
-const Login: React.FC = () => {
-  const {navigateTo, createHandler, navigateToAnotherDomain} =
-    useCustomNavigate()
-  const {login, isAuthenticated} = useAuth()
+const userService = new UserService()
+
+const NewPassword: React.FC = () => {
+  const {token} = useParams()
+  const {navigateTo, createHandler} = useCustomNavigate()
+  const [tokenIsValid, setTokenIsValid] = useState(false)
   const {showToast} = useContext(ToastContext)
   const [showPassword, setShowPassword] = useState(false)
-  const [hasLogin, setHasLogin] = useState<boolean>()
   const {register, handleSubmit} = useForm<FormData>()
 
-  useEffect(() => {
-    isAuthenticated(true).then((response) => {
-      if (response) {
-        navigateTo(PATHS.HOMEPAGE)
-      } else {
-        setHasLogin(false)
-      }
-    })
-  }, [])
+  const onSubmitLoading = useLoading(
+    onSubmit,
+    'Aguarde um momento. Atualizando senha...',
+    false
+  )
 
-  function handleGoogleAuth() {
-    const loginURL = new PathBuilder(API_URL).addPath('login').build()
-    navigateToAnotherDomain(loginURL)
-  }
+  useEffect(() => {
+    if (token) {
+      userService.validateResetToken(token).then((isValid) => {
+        if (isValid) {
+          setTokenIsValid(true)
+        } else {
+          navigateTo(PATHS.LOGIN)
+        }
+      })
+    }
+  }, [])
 
   function togglePasswordVisibility() {
     setShowPassword(!showPassword)
   }
 
-  function onSubmit(data: FormData) {
-    login(data.email, data.password)
-      .then(() => {
-        navigateTo(PATHS.HOMEPAGE)
-      })
-      .catch(() => {
-        showToast('Usuário e/ou senha incorretos. Tente novamente.', 'error')
-      })
+  async function onSubmit(data: FormData) {
+    if (!token) {
+      navigateTo(PATHS.LOGIN)
+      return
+    }
+
+    const {confirmPassword, password} = data
+
+    if (!password) {
+      showToast('Preencha o campo de senha.', 'error')
+    }
+
+    if (!confirmPassword) {
+      showToast('Preencha o campo de confirmação de senha.', 'error')
+      return
+    }
+
+    if (password === confirmPassword) {
+      return userService
+        .updatePassword(token, password)
+        .then(() => {
+          showToast('Sua senha foi atualizada com sucesso.', 'success')
+          navigateTo(PATHS.LOGIN)
+        })
+        .catch(() => {
+          showToast(
+            'Erro ao atualizar sua senha. Por favor, tente novamente ou acesse novamente o link do seu e-mail.',
+            'error'
+          )
+        })
+    }
   }
 
-  if (hasLogin === undefined) {
+  if (!tokenIsValid) {
     return <FullLoading />
   }
 
@@ -94,12 +117,12 @@ const Login: React.FC = () => {
             container
             padding={4}
             borderRadius={2}
-            gap={1}
+            gap={2}
             component="form"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmitLoading)}
           >
             <ChevronLeftIcon
-              onClick={createHandler(PATHS.MAIN)}
+              onClick={createHandler(PATHS.LOGIN)}
               sx={{
                 cursor: 'pointer',
               }}
@@ -109,15 +132,10 @@ const Login: React.FC = () => {
                 fontWeight: 'bold',
               }}
             >
-              Fazer Login
+              Definir Nova Senha
             </FormLabel>
             <FormControl fullWidth>
-              <InputLabel htmlFor="email">E-mail</InputLabel>
-              <Input fullWidth type="email" id="email" {...register('email')} />
-              <FormHelperText>Ex: meu.email@meudominio.com.br</FormHelperText>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="password">Senha</InputLabel>
+              <InputLabel htmlFor="password">Nova Senha</InputLabel>
               <Input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
@@ -138,45 +156,33 @@ const Login: React.FC = () => {
                 }
               />
             </FormControl>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="confirmPassword">Confirmar Senha</InputLabel>
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                id="confirmPassword"
+                {...register('confirmPassword')}
+                endAdornment={
+                  <InputAdornment
+                    position="end"
+                    sx={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {showPassword ? (
+                      <VisibilityOff onClick={togglePasswordVisibility} />
+                    ) : (
+                      <Visibility onClick={togglePasswordVisibility} />
+                    )}
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
             <Grid container direction="column" alignItems="center" gap={2}>
               <Grid item>
                 <Button type="submit" variant="contained" color="primary">
-                  Entrar
+                  ATUALIZAR SENHA
                 </Button>
-              </Grid>
-            </Grid>
-            <Grid container direction="column" alignItems="center" gap={2}>
-              <Grid item sx={{marginTop: 2, marginBottom: 2}}>
-                <FormLabel>Ou</FormLabel>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleGoogleAuth}
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<GoogleIcon />}
-                >
-                  Entrar Com Google
-                </Button>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                }}
-              >
-                <Typography variant="body2" component="label">
-                  Ainda não possui uma conta?{' '}
-                  <Link to={PATHS.SIGNUP}>Clique aqui para se inscrever.</Link>
-                </Typography>
-                <Typography variant="body2" component="label">
-                  Esqueceu sua senha?{' '}
-                  <Link to={PATHS.RESET_PASSWORD}>
-                    Clique aqui para redefinir sua senha.
-                  </Link>
-                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -203,4 +209,4 @@ const Login: React.FC = () => {
   )
 }
 
-export default Login
+export default NewPassword

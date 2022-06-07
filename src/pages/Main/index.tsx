@@ -3,6 +3,7 @@ import QrCodeIcon from '@mui/icons-material/QrCode'
 import TimelineIcon from '@mui/icons-material/Timeline'
 import {Button} from '@mui/material'
 import React from 'react'
+import ParintinsBandeiraIcon from '../../assets/bandeira-parintins.jpg'
 import {useCustomNavigate} from '../../hooks/useRedirect'
 import {PATHS} from '../../routes'
 import {Container, ContainerResponsive} from './styles'
@@ -94,6 +95,11 @@ const Main: React.FC = () => {
             </div>
 
             <div className="divisor">
+              <img
+                className="flag"
+                src={ParintinsBandeiraIcon}
+                alt="Bandeira de Parintins"
+              />
               <h2 className="divisor-title">
                 Conheça a cidade de Parintins de uma forma difente!
               </h2>

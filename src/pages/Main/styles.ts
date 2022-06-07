@@ -17,6 +17,7 @@ export const Container = styled.div`
 
   .header {
     display: flex;
+    position: relative;
     height: 48px;
     align-items: center;
     justify-content: flex-end;
@@ -112,6 +113,12 @@ export const Container = styled.div`
     .map {
       width: 60%;
       height: 500px;
+    }
+
+    .flag {
+      width: 100px;
+      height: auto;
+      margin: 32px 0;
     }
   }
 
