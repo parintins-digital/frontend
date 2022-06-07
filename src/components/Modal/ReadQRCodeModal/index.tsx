@@ -30,7 +30,7 @@ const style: SxProps<Theme> = {
 }
 
 export interface ReadQRCodeModalProps {
-  open: () => void
+  open: (id?: string) => void
   close: () => void
 }
 
@@ -44,7 +44,9 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
   const {showToast} = useContext(ToastContext)
   const {navigateToAnotherDomain} = useCustomNavigate()
   const [scanRef] = useCustomRef<HTMLDivElement>(() => settingQRCodeScanner())
+
   let scanner: Html5Qrcode
+  let compareWith: string | undefined
 
   function settingQRCodeScanner() {
     const html5Qrcode = new Html5Qrcode(SCAN_ELEMENT, {
@@ -70,8 +72,18 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
     scanner: Html5Qrcode
   ) {
     if (url.includes(DOMAIN)) {
-      navigateToAnotherDomain(url)
-      scanner.stop()
+      if (compareWith !== undefined && url.includes(compareWith)) {
+        navigateToAnotherDomain(url)
+        scanner.stop()
+      } else if (compareWith !== undefined && !url.includes(compareWith)) {
+        showToast(
+          'QRCode não correspondente a figura selecionada. Por favor, leia um QR Code válido ou faça o registro de sua visita na opção "Registrar Visita".',
+          'error'
+        )
+      } else if (compareWith === undefined) {
+        navigateToAnotherDomain(url)
+        scanner.stop()
+      }
     } else {
       showToast(
         'QRCode inválido para registro de visita. Por favor, leia um QR Code válido.',
@@ -80,13 +92,15 @@ const ReadQRCodeModal: React.ForwardRefRenderFunction<ReadQRCodeModalProps> = (
     }
   }
 
-  const handleOpen = useCallback(() => {
+  const handleOpen = useCallback((id?: string) => {
     setOpen(true)
+    compareWith = id
   }, [])
 
   const handleClose = useCallback(() => {
     setOpen(false)
     scanner.stop()
+    compareWith = undefined
   }, [])
 
   useImperativeHandle<Record<string, any>, ReadQRCodeModalProps>(ref, () => ({

@@ -9,6 +9,9 @@ export interface Picture {
   filename?: string
   category: CategoryType
   createdAt?: Date
+  currentUser?: {
+    visited: boolean
+  }
 }
 
 export function categoryNameOf(category: CategoryType): string {
@@ -25,10 +28,10 @@ export function categoryColorOf(
   category: CategoryType
 ): 'warning' | 'primary' | 'secondary' | 'success' | 'error' | 'info' {
   const dictionary = {
-    ATTRACTION: 'warning',
-    CULTURE: 'secondary',
+    ATTRACTION: 'info',
+    CULTURE: 'error',
     LANDMARK: 'success',
-    COMMUNITY: 'info',
+    COMMUNITY: 'primary',
   }
   return dictionary[category] as
     | 'warning'

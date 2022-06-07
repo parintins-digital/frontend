@@ -13,6 +13,7 @@ import TabArea from '../TabArea'
 interface Props {
   onEdit: (id: string) => void
   onDelete: (id: string) => void
+  onVisit: (picture: PictureEntity) => void
   filterBy?: CategoryType
   filter?: Filter
 }
@@ -24,19 +25,24 @@ const PicturesList: React.FC<Props> = ({
   filter = {},
   onDelete,
   onEdit,
+  onVisit,
 }: Props) => {
   const [pictures, setPictures] = useState<Array<PictureEntity>>([])
   const handleFetch = useLoading(fetch, 'Buscando figuras cadastradas...')
 
   function renderPicture(picture: PictureEntity, index: number) {
     return (
-      <Fade in timeout={index * 500}>
+      <Fade in timeout={index * 500} key={picture.id || picture.title}>
         <Badge
           color={categoryColorOf(picture.category)}
           badgeContent={`${index + 1}`}
-          key={picture.id || picture.title}
         >
-          <Picture onDelete={onDelete} onEdit={onEdit} picture={picture} />
+          <Picture
+            onVisit={onVisit}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            picture={picture}
+          />
         </Badge>
       </Fade>
     )

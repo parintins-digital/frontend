@@ -11,6 +11,7 @@ const TabArea: React.FC<Props> = ({children}: Props) => {
       flexDirection="row"
       flexWrap="wrap"
       marginTop={2}
+      paddingBottom={4}
       gap={8}
     >
       {children.length !== 0 ? (

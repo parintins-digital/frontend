@@ -1,3 +1,4 @@
+import {Search} from '@mui/icons-material'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
 import AddIcon from '@mui/icons-material/Add'
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage'
@@ -15,6 +16,7 @@ import {
   FormControl,
   Grid,
   Input,
+  InputAdornment,
   InputLabel,
   InputProps,
   List,
@@ -43,6 +45,7 @@ import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
 import {ToastContext} from '../../contexts/Toast'
+import {categoryColorOf, Picture} from '../../entities/Picture'
 import {useAuth} from '../../hooks/useAuth'
 import {useFilter} from '../../hooks/useFilter'
 import {useLoading} from '../../hooks/useLoading'
@@ -54,6 +57,7 @@ import {
   PictureService,
 } from '../../services/PictureService'
 import {Filter as FilterVisit} from '../../services/VisitService'
+
 enum Tabs {
   HOME,
   PONTOS_TURISTICOS,
@@ -143,6 +147,10 @@ const Homepage: React.FC = () => {
     }
   }
 
+  async function handleCreateVisitForEspecificPicture(picture: Picture) {
+    readQRCodeModal.current?.open(picture.id)
+  }
+
   if (!hasLogin) {
     return <FullLoading />
   }
@@ -187,25 +195,25 @@ const Homepage: React.FC = () => {
                 onClick={() => changeTab(Tabs.PONTOS_TURISTICOS)}
               >
                 <ListItemIcon>
-                  <TheatersIcon />
+                  <TheatersIcon color={categoryColorOf('ATTRACTION')} />
                 </ListItemIcon>
                 <ListItemText primary="Pontos Turísticos" />
               </ListItem>
               <ListItem button onClick={() => changeTab(Tabs.CULTURA)}>
                 <ListItemIcon>
-                  <TheaterComedyIcon />
+                  <TheaterComedyIcon color={categoryColorOf('CULTURE')} />
                 </ListItemIcon>
                 <ListItemText primary="Cultura" />
               </ListItem>
               <ListItem button onClick={() => changeTab(Tabs.POINT)}>
                 <ListItemIcon>
-                  <LocationCityIcon />
+                  <LocationCityIcon color={categoryColorOf('LANDMARK')} />
                 </ListItemIcon>
                 <ListItemText primary="Point da Cidade" />
               </ListItem>
               <ListItem button onClick={() => changeTab(Tabs.PERSONALIDADES)}>
                 <ListItemIcon>
-                  <HolidayVillageIcon />
+                  <HolidayVillageIcon color={categoryColorOf('COMMUNITY')} />
                 </ListItemIcon>
                 <ListItemText primary="Personalidades e Comunidades" />
               </ListItem>
@@ -242,7 +250,22 @@ const Homepage: React.FC = () => {
         </Drawer>
 
         <Box
-          p={4}
+          pl={{
+            xl: 4,
+            lg: 4,
+            md: 4,
+            sm: 4,
+            xs: 1,
+          }}
+          pr={{
+            xl: 4,
+            lg: 4,
+            md: 4,
+            sm: 4,
+            xs: 1,
+          }}
+          pt={4}
+          pb={4}
           mt={8}
           sx={{
             width: '100%',
@@ -282,10 +305,16 @@ const Homepage: React.FC = () => {
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
 
               <PicturesList
+                onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
@@ -316,9 +345,15 @@ const Homepage: React.FC = () => {
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
               <PicturesList
+                onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
@@ -350,9 +385,15 @@ const Homepage: React.FC = () => {
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
               <PicturesList
+                onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
@@ -384,9 +425,15 @@ const Homepage: React.FC = () => {
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
               <PicturesList
+                onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
@@ -418,9 +465,15 @@ const Homepage: React.FC = () => {
                 <Input
                   fullWidth
                   {...(registerFilterPicture('title') as InputProps)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
               <PicturesList
+                onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
                 onDelete={handleDeletePicture}
@@ -450,6 +503,11 @@ const Homepage: React.FC = () => {
                 <Input
                   fullWidth
                   {...(registerFilterVisit('pictureTitle') as InputProps)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
               <VisitList filter={visitFilters} />

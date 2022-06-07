@@ -1,4 +1,5 @@
-import {Download} from '@mui/icons-material'
+import {Download, QrCode} from '@mui/icons-material'
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -14,6 +15,7 @@ import Typography from '@mui/material/Typography'
 import {QRCodeCanvas} from 'qrcode.react'
 import {useState} from 'react'
 import DefaultPicture from '../../assets/DefaultPicture.svg'
+import {colors} from '../../colors'
 import {API_URL, DOMAIN} from '../../Constants'
 import {
   categoryColorOf,
@@ -21,7 +23,9 @@ import {
   Picture as PictureEntity,
 } from '../../entities/Picture'
 import {useAuth} from '../../hooks/useAuth'
+import {PictureService} from '../../services/PictureService'
 import {PathBuilder} from '../../utils/PathBuilder'
+import {CardNotFlipped} from './styles'
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
 }
@@ -40,12 +44,24 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 interface Props {
   onDelete: (id: string) => void
   onEdit: (id: string) => void
+  onVisit: (picture: PictureEntity) => void
   picture: PictureEntity
 }
 
-const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
+const pictureService = new PictureService()
+
+const Picture: React.FC<Props> = ({
+  picture,
+  onDelete,
+  onEdit,
+  onVisit,
+}: Props) => {
+  const flippedPictures = pictureService.getFlippedPictures()
   const [expanded, setExpanded] = useState(false)
   const {isAdmin} = useAuth()
+  const [flipped, setFlipped] = useState(
+    !!(isAdmin || (picture.id && flippedPictures.includes(picture.id)))
+  )
 
   const qrCodeURL = new PathBuilder(DOMAIN)
     .addPath('homepage')
@@ -54,6 +70,12 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
 
   const handleExpandClick = () => {
     setExpanded(!expanded)
+  }
+
+  function handleFlip() {
+    if (!picture.id) return
+    pictureService.flipPicture(picture.id)
+    setFlipped(true)
   }
 
   function downloadQRCode() {
@@ -65,6 +87,73 @@ const Picture: React.FC<Props> = ({picture, onDelete, onEdit}: Props) => {
     downloadLink.download = 'QRCode-' + picture.title
     downloadLink.href = `${pngFile}`
     downloadLink.click()
+  }
+
+  if (!isAdmin && !picture.currentUser?.visited) {
+    return (
+      <Card
+        sx={{maxWidth: 300, display: 'flex', flexDirection: 'column'}}
+        draggable={false}
+      >
+        <CardContent draggable={false}>
+          <Typography variant="subtitle1" fontStyle="italic" color="GrayText">
+            Você ainda não visitou este local.
+          </Typography>
+          <Typography gutterBottom variant="h5" component="div">
+            {picture.title}
+          </Typography>
+          <Chip
+            sx={{
+              marginTop: '2px',
+              marginBottom: '2px',
+            }}
+            label={categoryNameOf(picture.category)}
+            color={categoryColorOf(picture.category)}
+          />
+          <Typography variant="subtitle1" fontStyle="italic" color="GrayText">
+            Criado por {picture.author}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {picture.description}
+          </Typography>
+        </CardContent>
+        <CardActions
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            background: colors.secondary,
+            marginTop: 'auto',
+          }}
+        >
+          <Button
+            onClick={() => onVisit(picture)}
+            startIcon={<QrCode />}
+            variant="contained"
+            color="secondary"
+          >
+            Registrar Visita
+          </Button>
+        </CardActions>
+      </Card>
+    )
+  }
+
+  if (!flipped && picture.currentUser?.visited) {
+    return (
+      <CardNotFlipped draggable={false} onClick={handleFlip}>
+        <Card sx={{maxWidth: 300}} draggable={false}>
+          <CardContent>
+            <Typography variant="subtitle1" fontStyle="italic" color="GrayText">
+              Você visitou {picture.title}.
+            </Typography>
+            <Typography gutterBottom variant="h5" component="h5">
+              Clique aqui para desvirar
+            </Typography>
+            <AutoAwesomeIcon color="secondary" />
+          </CardContent>
+        </Card>
+      </CardNotFlipped>
+    )
   }
 
   return (

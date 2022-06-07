@@ -13,12 +13,14 @@ import React, {
   useState,
 } from 'react'
 import {colors} from '../../../colors'
+import {API_URL} from '../../../Constants'
 import {ToastContext} from '../../../contexts/Toast'
 import {Picture} from '../../../entities/Picture'
 import {useLoading} from '../../../hooks/useLoading'
 import {PictureService} from '../../../services/PictureService'
 import {VisitService} from '../../../services/VisitService'
 import {dateFrom, dateTimeFrom} from '../../../utils/FormatDateTime'
+import {PathBuilder} from '../../../utils/PathBuilder'
 
 const style: SxProps<Theme> = {
   display: 'flex',
@@ -52,11 +54,7 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
   const [open, setOpen] = React.useState(false)
   const [imageURL, setImageURL] = useState<string>()
   const {showToast, closeToast} = useContext(ToastContext)
-  const handleFetchPicture = useLoading(
-    fetch,
-    `Buscando figura de ID: ${pictureId}`,
-    false
-  )
+  const handleFetchPicture = useLoading(fetch, 'Buscando figura...', false)
   const handleSubmit = useLoading(onSubmit, 'Registrando visita...', false)
   const [picture, setPicture] = useState<Picture>()
 
@@ -65,9 +63,7 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
   }, [])
 
   async function fetch() {
-    const newPicture = await pictureService
-      .findById(pictureId)
-      .catch(() => undefined)
+    const newPicture = await pictureService.findById(pictureId)
 
     if (!newPicture) {
       showToast(
@@ -77,8 +73,14 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
       handleClose()
       return
     }
-
-    if (newPicture.image) setImageURL(URL.createObjectURL(newPicture.image))
+    if (newPicture.filename) {
+      setImageURL(
+        new PathBuilder(API_URL)
+          .addPath('images')
+          .addPath(newPicture.filename)
+          .build()
+      )
+    }
     setPicture(newPicture)
     closeToast()
     handleOpen()
@@ -93,7 +95,7 @@ const VisitModal: React.ForwardRefRenderFunction<VisitProps, Props> = (
   }, [])
 
   async function onSubmit() {
-    await visitService
+    return visitService
       .create({
         pictureId: pictureId,
         visitedOn: new Date(),

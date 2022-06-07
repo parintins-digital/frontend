@@ -5,7 +5,7 @@ import {getLocalStorage, setLocalStorage} from './StorageService'
 
 export const PATH = '/picture'
 const MULTIPART_FORM_TYPE = 'multipart/form-data'
-const FLIPPED_PICTURES_LOCAL_NAME = 'flippedCards'
+const FLIPPED_PICTURES_LOCAL_NAME = 'FLIPPED_PICTURES'
 
 export interface Filter {
   title?: string
@@ -49,9 +49,11 @@ export class PictureService {
   }
 
   async findById(id: string): Promise<Picture | undefined> {
-    const {data: picture} = await api.get<Picture | undefined>(
-      new PathBuilder(PATH).addPath(id).build()
-    )
+    const {data: picture} = await api
+      .get<Picture | undefined>(new PathBuilder(PATH).addPath(id).build())
+      .catch(() => {
+        return {data: undefined}
+      })
     let pictureWithImage: Picture | undefined
     if (picture && picture.filename) {
       const {data: imageFile} = await api
