@@ -13,7 +13,7 @@ export enum PATHS {
   LOGIN = '/login',
   ADMIN_LOGIN = '/login/admin',
   RESET_PASSWORD = '/reset/password',
-  NEW_PASSWORD = '/reset/password/:token',
+  NEW_PASSWORD = '/reset/new-password',
   HOMEPAGE = '/homepage',
   HOMEPAGE_REGISTRY_VISIT = '/homepage/:pictureId',
   SIGNUP = '/signup',

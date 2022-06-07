@@ -14,6 +14,7 @@ interface Props {
   onEdit: (id: string) => void
   onDelete: (id: string) => void
   onVisit: (picture: PictureEntity) => void
+  onFullScreen: (picture: PictureEntity) => void
   filterBy?: CategoryType
   filter?: Filter
 }
@@ -26,6 +27,7 @@ const PicturesList: React.FC<Props> = ({
   onDelete,
   onEdit,
   onVisit,
+  onFullScreen,
 }: Props) => {
   const [pictures, setPictures] = useState<Array<PictureEntity>>([])
   const handleFetch = useLoading(fetch, 'Buscando figuras cadastradas...')
@@ -38,6 +40,7 @@ const PicturesList: React.FC<Props> = ({
           badgeContent={`${index + 1}`}
         >
           <Picture
+            onFullScreen={onFullScreen}
             onVisit={onVisit}
             onDelete={onDelete}
             onEdit={onEdit}

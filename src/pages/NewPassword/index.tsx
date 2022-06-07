@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import {useContext, useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
-import {useParams} from 'react-router-dom'
+import {useSearchParams} from 'react-router-dom'
 import LoginVideo from '../../assets/LoginVideo.mp4'
 import {colors} from '../../colors'
 import FullLoading from '../../components/FullLoading'
@@ -29,12 +29,14 @@ interface FormData {
 const userService = new UserService()
 
 const NewPassword: React.FC = () => {
-  const {token} = useParams()
+  const [searchParams] = useSearchParams()
   const {navigateTo, createHandler} = useCustomNavigate()
   const [tokenIsValid, setTokenIsValid] = useState(false)
   const {showToast} = useContext(ToastContext)
   const [showPassword, setShowPassword] = useState(false)
   const {register, handleSubmit} = useForm<FormData>()
+
+  const token = searchParams.get('token')
 
   const onSubmitLoading = useLoading(
     onSubmit,

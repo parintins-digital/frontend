@@ -3,6 +3,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import {Button, Chip} from '@mui/material'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -25,7 +26,7 @@ import {
 import {useAuth} from '../../hooks/useAuth'
 import {PictureService} from '../../services/PictureService'
 import {PathBuilder} from '../../utils/PathBuilder'
-import {CardNotFlipped} from './styles'
+import {CardNotFlipped, FullScreenWrapper} from './styles'
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
 }
@@ -45,6 +46,7 @@ interface Props {
   onDelete: (id: string) => void
   onEdit: (id: string) => void
   onVisit: (picture: PictureEntity) => void
+  onFullScreen: (picture: PictureEntity) => void
   picture: PictureEntity
 }
 
@@ -55,6 +57,7 @@ const Picture: React.FC<Props> = ({
   onDelete,
   onEdit,
   onVisit,
+  onFullScreen,
 }: Props) => {
   const flippedPictures = pictureService.getFlippedPictures()
   const [expanded, setExpanded] = useState(false)
@@ -158,20 +161,25 @@ const Picture: React.FC<Props> = ({
 
   return (
     <Card sx={{maxWidth: 300}} draggable={false}>
-      <CardMedia
-        component="img"
-        height="200"
-        draggable={false}
-        image={
-          picture.filename
-            ? new PathBuilder(API_URL)
-                .addPath('images')
-                .addPath(picture.filename)
-                .build()
-            : DefaultPicture
-        }
-        alt={picture.title}
-      />
+      <FullScreenWrapper onClick={() => onFullScreen(picture)}>
+        <CardMedia
+          component="img"
+          height="200"
+          draggable={false}
+          image={
+            picture.filename
+              ? new PathBuilder(API_URL)
+                  .addPath('images')
+                  .addPath(picture.filename)
+                  .build()
+              : DefaultPicture
+          }
+          alt={picture.title}
+        />
+        <div className="clickarea">
+          <FullscreenIcon />
+        </div>
+      </FullScreenWrapper>
       <CardContent draggable={false}>
         <Typography gutterBottom variant="h5" component="div">
           {picture.title}

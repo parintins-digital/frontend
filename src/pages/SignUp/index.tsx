@@ -68,6 +68,7 @@ const SignUp: React.FC = () => {
       .create(newUser)
       .then(() => {
         navigateTo(PATHS.LOGIN)
+        showToast('Registro feito com sucesso!', 'success')
       })
       .catch(() => {
         showToast(

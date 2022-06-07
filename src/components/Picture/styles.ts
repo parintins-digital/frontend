@@ -1,4 +1,5 @@
 import styled, {keyframes} from 'styled-components'
+import {colors} from '../../colors'
 
 const degrees = '1deg'
 
@@ -31,5 +32,46 @@ export const CardNotFlipped = styled.div`
 
   :hover {
     transform: scale(1.1);
+  }
+`
+
+export const FullScreenWrapper = styled.div`
+  height: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .clickarea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 2;
+    transition: 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 48px;
+      height: auto;
+      color: transparent;
+      transition: color 0.2s;
+    }
+  }
+
+  :hover {
+    .clickarea {
+      background-color: ${colors.secondary};
+      opacity: 0.5;
+
+      svg {
+        color: ${colors.secondaryContrast};
+      }
+    }
   }
 `

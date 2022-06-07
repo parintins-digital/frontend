@@ -41,9 +41,13 @@ import PictureModal, {PictureProps} from '../../components/Modal/PictureModal'
 import ReadQRCodeModal, {
   ReadQRCodeModalProps,
 } from '../../components/Modal/ReadQRCodeModal'
+import ShowImageModal, {
+  ShowModalProps,
+} from '../../components/Modal/ShowImageModal'
 import VisitModal, {VisitProps} from '../../components/Modal/VisitModal'
 import PicturesList from '../../components/PicturesList'
 import VisitList from '../../components/VisitList'
+import {API_URL} from '../../Constants'
 import {ToastContext} from '../../contexts/Toast'
 import {categoryColorOf, Picture} from '../../entities/Picture'
 import {useAuth} from '../../hooks/useAuth'
@@ -57,6 +61,7 @@ import {
   PictureService,
 } from '../../services/PictureService'
 import {Filter as FilterVisit} from '../../services/VisitService'
+import {PathBuilder} from '../../utils/PathBuilder'
 
 enum Tabs {
   HOME,
@@ -84,6 +89,7 @@ const Homepage: React.FC = () => {
   const editPictureModal = useRef<EditPictureProps>(null)
   const confirmDialogue = useRef<ConfirmDialogueProps>(null)
   const visitModal = useRef<VisitProps>(null)
+  const showImageModal = useRef<ShowModalProps>(null)
 
   const {showToast} = useContext(ToastContext)
 
@@ -149,6 +155,19 @@ const Homepage: React.FC = () => {
 
   async function handleCreateVisitForEspecificPicture(picture: Picture) {
     readQRCodeModal.current?.open(picture.id)
+  }
+
+  async function showImageFullScreen(picture: Picture) {
+    if (picture.filename) {
+      showImageModal.current?.open(
+        new PathBuilder(API_URL)
+          .addPath('images')
+          .addPath(picture.filename)
+          .build()
+      )
+    } else {
+      showToast('Figura sem nenhuma imagem cadastrada.', 'error')
+    }
   }
 
   if (!hasLogin) {
@@ -314,6 +333,7 @@ const Homepage: React.FC = () => {
               </FormControl>
 
               <PicturesList
+                onFullScreen={showImageFullScreen}
                 onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
@@ -353,6 +373,7 @@ const Homepage: React.FC = () => {
                 />
               </FormControl>
               <PicturesList
+                onFullScreen={showImageFullScreen}
                 onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
@@ -393,6 +414,7 @@ const Homepage: React.FC = () => {
                 />
               </FormControl>
               <PicturesList
+                onFullScreen={showImageFullScreen}
                 onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
@@ -433,6 +455,7 @@ const Homepage: React.FC = () => {
                 />
               </FormControl>
               <PicturesList
+                onFullScreen={showImageFullScreen}
                 onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
@@ -473,6 +496,7 @@ const Homepage: React.FC = () => {
                 />
               </FormControl>
               <PicturesList
+                onFullScreen={showImageFullScreen}
                 onVisit={handleCreateVisitForEspecificPicture}
                 filter={pictureFilters}
                 onEdit={handleEditPicture}
@@ -583,6 +607,7 @@ const Homepage: React.FC = () => {
           ref={editPictureModal}
         />
       )}
+      <ShowImageModal ref={showImageModal} />
       {pictureId && <VisitModal ref={visitModal} pictureId={pictureId} />}
     </Grid>
   )
