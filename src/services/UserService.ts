@@ -31,10 +31,9 @@ export class UserService {
   }
 
   async logout(): Promise<void> {
-    await api.delete(new PathBuilder().addPath('logout').build()).then(() => {
-      clearCookies()
-      clearSessionStorage()
-    })
+    await api.delete(new PathBuilder().addPath('logout').build())
+    clearCookies()
+    clearSessionStorage()
   }
 
   async isAdmin(): Promise<boolean> {

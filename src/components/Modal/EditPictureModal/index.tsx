@@ -12,6 +12,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
+import axios from 'axios'
 import React, {
   ChangeEvent,
   forwardRef,
@@ -114,8 +115,20 @@ const EditPictureModal: React.ForwardRefRenderFunction<
     const {category, description, title, author} = data
 
     if (imageURL) {
-      const response = await fetch(imageURL)
-      const blob = await response.blob()
+      let blob: Blob
+
+      if (imageURL.includes(API_URL)) {
+        const {data: responseBlob} = await axios
+          .create({
+            withCredentials: true,
+          })
+          .get<Blob>(imageURL)
+        blob = responseBlob
+      } else {
+        const response = await fetch(imageURL)
+        blob = await response.blob()
+      }
+
       fileImage = new File([blob], `${data.title}.jpeg`)
     }
 
